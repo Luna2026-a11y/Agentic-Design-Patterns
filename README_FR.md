@@ -7,6 +7,18 @@
 
 > 🇬🇧 [English version](README.md) | 🇫🇷 **Version française**
 
+## 🎮 Cours interactif
+
+Essayez le cours interactif en ligne : **[agentic-patterns.html](agentic-patterns.html)**
+
+4 niveaux progressifs avec cours + quiz pour valider vos connaissances :
+- 🔌 **Niveau 0** — Le moteur de raisonnement (LLM de base)
+- 🔧 **Niveau 1** — Le résolveur connecté (outils, APIs, RAG)
+- 🧠 **Niveau 2** — Le résolveur stratégique (chaining, routing, reflection)
+- 🤝 **Niveau 3** — Le système collaboratif (multi-agent, A2A, guardrails)
+
+Débloquez chaque niveau en obtenant 4/5 au quiz ! 🏆
+
 ## 📖 À propos de ce dépôt
 
 Ce dépôt contient les matériaux complets pour **« Agentic Design Patterns : A Hands-On Guide to Building Intelligent Systems »** d'Antonio Gulli. Il comprend tous les chapitres en format PDF et les notebooks de code accompagnateurs pour un apprentissage pratique.
