@@ -6,503 +6,110 @@
 <title>🤖 Agentic Design Patterns — Cours interactif</title>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;800&family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--primary:#7c4dff;--primary-rgb:124,77,255;--primary-light:#b388ff;--accent:#00e5ff;--bg:#0d0d1a;--surface:#1a1a2e;--correct:#00e676;--wrong:#ff5252;--gold:#ffd740}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:#e0e0e0;font-family:'Fredoka',sans-serif;min-height:100dvh}
+:root{--primary:#7c4dff;--primary-light:#b388ff;--accent:#00e5ff;--bg:#0d0d1a;--surface:#1a1a2e;--correct:#00e676;--wrong:#ff5252;--gold:#ffd740}
+*{box-sizing:border-box;margin:0;padding:0}body{background:var(--bg);color:#e0e0e0;font-family:'Fredoka',sans-serif;min-height:100dvh}
 body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse at 20% 0%,rgba(124,77,255,.12) 0%,transparent 50%),radial-gradient(ellipse at 80% 100%,rgba(0,229,255,.08) 0%,transparent 50%)}
-.app{max-width:640px;margin:0 auto;padding:48px 20px 60px;position:relative;z-index:1}
-.screen{display:none}.screen.active{display:block}
-
-/* NAV */
-.nav-back{display:inline-flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;color:var(--primary-light);font-family:'Fredoka',sans-serif;font-size:.88rem;font-weight:600;margin-bottom:16px;padding:0;text-decoration:none;transition:color .2s}
-.nav-back:hover{color:var(--accent)}
-
-/* HOME */
-.home-header{text-align:center;margin-bottom:28px}
-.home-icon{font-size:3.5rem;display:block;margin-bottom:4px;animation:iconFloat 3s ease-in-out infinite}
-@keyframes iconFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.app{max-width:640px;margin:0 auto;padding:48px 20px 60px;position:relative;z-index:1}.screen{display:none}.screen.active{display:block}
+.nav-back{display:inline-flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;color:var(--primary-light);font-family:'Fredoka',sans-serif;font-size:.88rem;font-weight:600;margin-bottom:16px;padding:0;transition:color .2s}.nav-back:hover{color:var(--accent)}
+.home-header{text-align:center;margin-bottom:28px}.home-icon{font-size:3.5rem;display:block;margin-bottom:4px;animation:iF 3s ease-in-out infinite}@keyframes iF{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 .home-title{font-family:'Baloo 2',sans-serif;font-size:1.9rem;font-weight:800;background:linear-gradient(135deg,#7c4dff,#00e5ff,#b388ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.home-subtitle{font-size:.85rem;color:#8c8ca0;font-weight:500;margin-top:4px}
-
-/* BADGES */
-.badges-row{display:flex;justify-content:center;gap:10px;margin-bottom:24px;flex-wrap:wrap}
-.badge-item{display:flex;flex-direction:column;align-items:center;gap:4px;opacity:.25;transition:opacity .3s,transform .3s}
-.badge-item.earned{opacity:1;transform:scale(1.06)}
-.badge-icon{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;box-shadow:0 2px 8px rgba(0,0,0,.3)}
-.badge-item[data-b="n0"] .badge-icon{background:linear-gradient(135deg,#455a64,#78909c)}
-.badge-item[data-b="n1"] .badge-icon{background:linear-gradient(135deg,#1565c0,#42a5f5)}
-.badge-item[data-b="n2"] .badge-icon{background:linear-gradient(135deg,#e65100,#ff9800)}
-.badge-item[data-b="n3"] .badge-icon{background:linear-gradient(135deg,#c0ca33,#fdd835)}
-.badge-label{font-size:.6rem;font-weight:600;color:#8c8ca0;text-align:center;line-height:1.3}
-
-/* PROGRESS BAR */
-.gpbar-wrap{background:var(--surface);border-radius:16px;padding:14px 20px;margin-bottom:22px;border:1px solid rgba(124,77,255,.2)}
-.gpbar-label{display:flex;justify-content:space-between;font-size:.78rem;font-weight:600;color:#8c8ca0;margin-bottom:8px}
-.gpbar-bg{height:10px;background:rgba(124,77,255,.15);border-radius:99px;overflow:hidden}
-.gpbar-fill{height:100%;background:linear-gradient(90deg,#7c4dff,#00e5ff);border-radius:99px;transition:width .6s ease}
-
-/* LEVEL CARDS */
-.levels-grid{display:grid;gap:13px}
-.level-card{display:flex;align-items:center;gap:16px;background:var(--surface);border-radius:20px;padding:18px 20px;box-shadow:0 2px 12px rgba(0,0,0,.2);border:2px solid rgba(124,77,255,.15);position:relative;overflow:hidden;transition:all .25s ease}
-.level-card:not(.locked){cursor:pointer}.level-card:not(.locked):hover{border-color:var(--primary-light);transform:translateY(-2px);box-shadow:0 4px 20px rgba(124,77,255,.25)}
-.level-card.locked{opacity:.45;filter:grayscale(.5)}
-.lv-num{width:48px;height:48px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',sans-serif;font-size:1.3rem;font-weight:800;background:linear-gradient(135deg,#7c4dff,#b388ff);color:#fff}
+.home-subtitle{font-size:.85rem;color:#8c8ca0;margin-top:4px}
+.badges-row{display:flex;justify-content:center;gap:10px;margin-bottom:24px;flex-wrap:wrap}.badge-item{display:flex;flex-direction:column;align-items:center;gap:4px;opacity:.25;transition:opacity .3s,transform .3s}.badge-item.earned{opacity:1;transform:scale(1.06)}
+.badge-icon{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;box-shadow:0 2px 8px rgba(0,0,0,.3);background:linear-gradient(135deg,#7c4dff,#b388ff)}.badge-label{font-size:.55rem;font-weight:600;color:#8c8ca0;text-align:center;line-height:1.2}
+.gpbar-wrap{background:var(--surface);border-radius:16px;padding:14px 20px;margin-bottom:22px;border:1px solid rgba(124,77,255,.2)}.gpbar-label{display:flex;justify-content:space-between;font-size:.78rem;font-weight:600;color:#8c8ca0;margin-bottom:8px}
+.gpbar-bg{height:10px;background:rgba(124,77,255,.15);border-radius:99px;overflow:hidden}.gpbar-fill{height:100%;background:linear-gradient(90deg,#7c4dff,#00e5ff);border-radius:99px;transition:width .6s ease}
+.levels-grid{display:grid;gap:13px}.level-card{display:flex;align-items:center;gap:16px;background:var(--surface);border-radius:20px;padding:18px 20px;box-shadow:0 2px 12px rgba(0,0,0,.2);border:2px solid rgba(124,77,255,.15);transition:all .25s ease}
+.level-card:not(.locked):not(.soon){cursor:pointer}.level-card:not(.locked):not(.soon):hover{border-color:var(--primary-light);transform:translateY(-2px);box-shadow:0 4px 20px rgba(124,77,255,.25)}
+.level-card.locked{opacity:.45;filter:grayscale(.5)}.level-card.soon{opacity:.55;filter:grayscale(.3)}
+.lv-num{width:40px;height:40px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',sans-serif;font-size:.9rem;font-weight:800;background:linear-gradient(135deg,#7c4dff,#b388ff);color:#fff}
 .level-card.completed .lv-num{background:linear-gradient(135deg,#00c853,#69f0ae)}
-.lv-info{flex:1;min-width:0}.lv-title{font-weight:700;font-size:1rem;color:#fff}.lv-desc{font-size:.78rem;color:#8c8ca0;margin-top:2px}
-.lv-stars{margin-top:4px;font-size:.85rem}.lv-status{font-size:1.3rem;flex-shrink:0}
-
-/* COURSE */
-.course-header{display:flex;align-items:center;gap:12px;margin-bottom:16px}
-.lvl-tag{display:inline-block;color:#fff;padding:4px 12px;border-radius:99px;font-size:.75rem;font-weight:700}
-.lvl-tag-0{background:linear-gradient(135deg,#455a64,#78909c)}
-.lvl-tag-1{background:linear-gradient(135deg,#1565c0,#42a5f5)}
-.lvl-tag-2{background:linear-gradient(135deg,#e65100,#ff9800)}
-.lvl-tag-3{background:linear-gradient(135deg,#c0ca33,#fdd835);color:#0d0d1a}
-.c-title{font-family:'Baloo 2',sans-serif;font-size:1.4rem;font-weight:800;color:#fff}
-
+.lv-info{flex:1;min-width:0}.lv-title{font-weight:700;font-size:.9rem;color:#fff}.lv-desc{font-size:.75rem;color:#8c8ca0;margin-top:2px}.lv-stars{margin-top:3px;font-size:.8rem}.lv-status{font-size:1.2rem;flex-shrink:0}
+.course-header{display:flex;align-items:center;gap:12px;margin-bottom:16px}.lvl-tag{display:inline-block;color:#fff;padding:4px 12px;border-radius:99px;font-size:.72rem;font-weight:700;background:linear-gradient(135deg,#7c4dff,#b388ff)}
+.c-title{font-family:'Baloo 2',sans-serif;font-size:1.3rem;font-weight:800;color:#fff}
 .lesson-card{background:rgba(255,255,255,.05);border:1px solid rgba(124,77,255,.15);border-radius:16px;padding:18px 20px;margin-bottom:14px}
-.lesson-card h3{font-family:'Baloo 2',sans-serif;font-size:1.1rem;color:var(--accent);margin-bottom:8px}
-.lesson-card p{font-size:.88rem;line-height:1.6;margin-bottom:8px}
-.lesson-card strong{color:var(--gold)}.lesson-card em{color:var(--primary-light)}
-.lesson-card ul,.lesson-card ol{font-size:.88rem;padding-left:20px;margin-bottom:8px}.lesson-card li{margin-bottom:4px}
-.lesson-card code{background:rgba(124,77,255,.2);padding:2px 6px;border-radius:4px;font-size:.82rem;color:var(--accent)}
-.tip{background:rgba(0,229,255,.08);border-left:3px solid var(--accent);padding:10px 14px;border-radius:0 10px 10px 0;font-size:.85rem;margin:10px 0}
-.tip strong{color:var(--accent)}
-
-.char-bubble{display:flex;align-items:flex-start;gap:14px;background:var(--surface);border-radius:16px;padding:16px;margin:16px 0;border:1px solid rgba(0,229,255,.15)}
-.bubble-text{font-size:.85rem;line-height:1.5;color:#ccc}
-
+.lesson-card h3{font-family:'Baloo 2',sans-serif;font-size:1.05rem;color:var(--accent);margin-bottom:8px}
+.lesson-card h4{font-family:'Baloo 2',sans-serif;font-size:.92rem;color:var(--primary-light);margin:10px 0 6px}
+.lesson-card p{font-size:.86rem;line-height:1.6;margin-bottom:8px}.lesson-card strong{color:var(--gold)}.lesson-card em{color:var(--primary-light)}
+.lesson-card ul,.lesson-card ol{font-size:.86rem;padding-left:20px;margin-bottom:8px}.lesson-card li{margin-bottom:4px}
+.lesson-card code{background:rgba(124,77,255,.2);padding:2px 6px;border-radius:4px;font-size:.78rem;color:var(--accent)}
+.lesson-card pre{background:rgba(0,0,0,.4);padding:14px;border-radius:10px;overflow-x:auto;font-size:.78rem;color:#b0bec5;margin:10px 0}.lesson-card pre code{background:none;padding:0}
+.tip{background:rgba(0,229,255,.08);border-left:3px solid var(--accent);padding:10px 14px;border-radius:0 10px 10px 0;font-size:.83rem;margin:10px 0}.tip strong{color:var(--accent)}
+.char-bubble{display:flex;align-items:flex-start;gap:14px;background:var(--surface);border-radius:16px;padding:16px;margin:16px 0;border:1px solid rgba(0,229,255,.15)}.bubble-text{font-size:.85rem;line-height:1.5;color:#ccc}
 .btn-row{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
-
-/* BUTTONS */
-.btn-purple{background:linear-gradient(135deg,#7c4dff,#5e35b1);color:#fff;border:none;padding:14px 28px;border-radius:14px;font-family:'Fredoka',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 4px 14px rgba(124,77,255,.3)}
-.btn-purple:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(124,77,255,.4)}
-.btn-cyan{background:linear-gradient(135deg,#00e5ff,#00b8d4);color:#0d0d1a;border:none;padding:14px 28px;border-radius:14px;font-family:'Fredoka',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 4px 14px rgba(0,229,255,.3)}
-.btn-cyan:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,229,255,.4)}
-.btn-ghost{background:none;color:#8c8ca0;border:1px solid rgba(255,255,255,.1);padding:12px 22px;border-radius:14px;font-family:'Fredoka',sans-serif;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .2s}
-.btn-ghost:hover{border-color:rgba(255,255,255,.3);color:#fff}
-.btn-green{background:linear-gradient(135deg,#00c853,#69f0ae);color:#0d0d1a;border:none;padding:14px 28px;border-radius:14px;font-family:'Fredoka',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 4px 14px rgba(0,200,83,.3)}
-.btn-green:hover{transform:translateY(-2px)}
-
-/* QUIZ */
-.quiz-card{background:var(--surface);border-radius:20px;padding:24px;border:1px solid rgba(124,77,255,.15);margin-bottom:16px}
-.quiz-q{font-family:'Baloo 2',sans-serif;font-size:1.1rem;color:#fff;margin-bottom:16px;line-height:1.5}
-.quiz-opts{display:grid;gap:10px}
-.quiz-opt{background:rgba(124,77,255,.1);border:2px solid rgba(124,77,255,.2);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:.9rem;color:#e0e0e0;transition:all .2s;text-align:left}
-.quiz-opt:hover:not(.disabled){border-color:var(--primary-light);background:rgba(124,77,255,.2)}
-.quiz-opt.correct{border-color:var(--correct);background:rgba(0,230,118,.15);color:#69f0ae}
-.quiz-opt.wrong{border-color:var(--wrong);background:rgba(255,82,82,.15);color:#ff8a80}
-.quiz-opt.disabled{cursor:default;opacity:.7}
-
-.quiz-fb{margin-top:14px;padding:14px;border-radius:12px;font-size:.88rem;line-height:1.5}
-.quiz-fb.ok{background:rgba(0,230,118,.1);border:1px solid rgba(0,230,118,.3);color:#69f0ae}
-.quiz-fb.err{background:rgba(255,82,82,.1);border:1px solid rgba(255,82,82,.3);color:#ff8a80}
-
-.quiz-progress{display:flex;gap:6px;justify-content:center;margin-bottom:16px}
-.qdot{width:12px;height:12px;border-radius:50%;background:rgba(124,77,255,.2);transition:all .3s}
-.qdot.cur{background:var(--accent);transform:scale(1.3)}.qdot.ok{background:var(--correct)}.qdot.err{background:var(--wrong)}
-
-.vf-opts{display:flex;gap:12px}
-.vf-opt{flex:1;padding:14px;text-align:center;cursor:pointer;background:rgba(124,77,255,.1);border:2px solid rgba(124,77,255,.2);border-radius:12px;font-size:1rem;font-weight:700;color:#e0e0e0;transition:all .2s}
-.vf-opt:hover:not(.disabled){border-color:var(--primary-light);background:rgba(124,77,255,.2)}
-.vf-opt.correct{border-color:var(--correct);background:rgba(0,230,118,.15);color:#69f0ae}
-.vf-opt.wrong{border-color:var(--wrong);background:rgba(255,82,82,.15);color:#ff8a80}
-.vf-opt.disabled{cursor:default;opacity:.7}
-
-/* RESULT */
-.res-box{text-align:center;padding:28px 20px}
-.res-score{font-family:'Baloo 2',sans-serif;font-size:3rem;font-weight:800;background:linear-gradient(135deg,#7c4dff,#00e5ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.res-sub{font-size:.9rem;color:#8c8ca0;margin-top:4px}
-.res-msg{margin:18px 0;padding:16px;border-radius:14px;font-size:.95rem;line-height:1.6}
-.res-msg.unlock{background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.2);color:#69f0ae}
-.res-msg.retry{background:rgba(255,152,0,.08);border:1px solid rgba(255,152,0,.2);color:#ffcc80}
+.btn-purple{background:linear-gradient(135deg,#7c4dff,#5e35b1);color:#fff;border:none;padding:14px 28px;border-radius:14px;font-family:'Fredoka',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 4px 14px rgba(124,77,255,.3)}.btn-purple:hover{transform:translateY(-2px)}
+.btn-cyan{background:linear-gradient(135deg,#00e5ff,#00b8d4);color:#0d0d1a;border:none;padding:14px 28px;border-radius:14px;font-family:'Fredoka',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 4px 14px rgba(0,229,255,.3)}.btn-cyan:hover{transform:translateY(-2px)}
+.btn-green{background:linear-gradient(135deg,#00c853,#69f0ae);color:#0d0d1a;border:none;padding:14px 28px;border-radius:14px;font-family:'Fredoka',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 4px 14px rgba(0,200,83,.3)}.btn-green:hover{transform:translateY(-2px)}
+.btn-ghost{background:none;color:#8c8ca0;border:1px solid rgba(255,255,255,.1);padding:12px 22px;border-radius:14px;font-family:'Fredoka',sans-serif;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .2s}.btn-ghost:hover{border-color:rgba(255,255,255,.3);color:#fff}
+.quiz-card{background:var(--surface);border-radius:20px;padding:24px;border:1px solid rgba(124,77,255,.15);margin-bottom:16px}.quiz-q{font-family:'Baloo 2',sans-serif;font-size:1.05rem;color:#fff;margin-bottom:16px;line-height:1.5}
+.quiz-opts{display:grid;gap:10px}.quiz-opt{background:rgba(124,77,255,.1);border:2px solid rgba(124,77,255,.2);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:.88rem;color:#e0e0e0;transition:all .2s;text-align:left}.quiz-opt:hover:not(.disabled){border-color:var(--primary-light);background:rgba(124,77,255,.2)}
+.quiz-opt.correct{border-color:var(--correct);background:rgba(0,230,118,.15);color:#69f0ae}.quiz-opt.wrong{border-color:var(--wrong);background:rgba(255,82,82,.15);color:#ff8a80}.quiz-opt.disabled{cursor:default;opacity:.7}
+.quiz-fb{margin-top:14px;padding:14px;border-radius:12px;font-size:.86rem;line-height:1.5}.quiz-fb.ok{background:rgba(0,230,118,.1);border:1px solid rgba(0,230,118,.3);color:#69f0ae}.quiz-fb.err{background:rgba(255,82,82,.1);border:1px solid rgba(255,82,82,.3);color:#ff8a80}
+.quiz-progress{display:flex;gap:6px;justify-content:center;margin-bottom:16px}.qdot{width:12px;height:12px;border-radius:50%;background:rgba(124,77,255,.2);transition:all .3s}.qdot.cur{background:var(--accent);transform:scale(1.3)}.qdot.ok{background:var(--correct)}.qdot.err{background:var(--wrong)}
+.vf-opts{display:flex;gap:12px}.vf-opt{flex:1;padding:14px;text-align:center;cursor:pointer;background:rgba(124,77,255,.1);border:2px solid rgba(124,77,255,.2);border-radius:12px;font-size:1rem;font-weight:700;color:#e0e0e0;transition:all .2s}.vf-opt:hover:not(.disabled){border-color:var(--primary-light);background:rgba(124,77,255,.2)}
+.vf-opt.correct{border-color:var(--correct);background:rgba(0,230,118,.15);color:#69f0ae}.vf-opt.wrong{border-color:var(--wrong);background:rgba(255,82,82,.15);color:#ff8a80}.vf-opt.disabled{cursor:default;opacity:.7}
+.res-box{text-align:center;padding:28px 20px}.res-score{font-family:'Baloo 2',sans-serif;font-size:3rem;font-weight:800;background:linear-gradient(135deg,#7c4dff,#00e5ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.res-sub{font-size:.9rem;color:#8c8ca0;margin-top:4px}.res-msg{margin:18px 0;padding:16px;border-radius:14px;font-size:.95rem;line-height:1.6}
+.res-msg.unlock{background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.2);color:#69f0ae}.res-msg.retry{background:rgba(255,152,0,.08);border:1px solid rgba(255,152,0,.2);color:#ffcc80}
 .res-stars{font-size:2rem;margin:12px 0}.res-stars span{margin:0 2px}
-.badge-notif{background:linear-gradient(135deg,rgba(255,215,64,.1),rgba(124,77,255,.1));border:2px solid var(--gold);border-radius:16px;padding:16px;text-align:center;margin:16px 0;display:none}
-.badge-notif.show{display:block}.badge-notif h3{color:var(--gold);font-family:'Baloo 2',sans-serif;margin-bottom:4px}.badge-notif p{font-size:.85rem;color:#ccc}
-
-.confetti-piece{position:fixed;z-index:9999;pointer-events:none;animation:confettiFall linear forwards}
-@keyframes confettiFall{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+.badge-notif{background:linear-gradient(135deg,rgba(255,215,64,.1),rgba(124,77,255,.1));border:2px solid var(--gold);border-radius:16px;padding:16px;text-align:center;margin:16px 0;display:none}.badge-notif.show{display:block}.badge-notif h3{color:var(--gold);font-family:'Baloo 2',sans-serif;margin-bottom:4px}.badge-notif p{font-size:.85rem;color:#ccc}
+.confetti-piece{position:fixed;z-index:9999;pointer-events:none;animation:cF linear forwards}@keyframes cF{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
 </style>
 </head>
 <body>
 <div class="app">
-
-<!-- ═══ HOME ═══ -->
 <div class="screen active" id="sHome">
-  <div class="home-header">
-    <span class="home-icon">🤖</span>
-    <div class="home-title">Agentic Design Patterns</div>
-    <div class="home-subtitle">Cours interactif — Montez en niveau !</div>
-  </div>
-  <div class="badges-row">
-    <div class="badge-item" data-b="n0"><div class="badge-icon">🔌</div><div class="badge-label">Niveau 0<br>Moteur IA</div></div>
-    <div class="badge-item" data-b="n1"><div class="badge-icon">🔧</div><div class="badge-label">Niveau 1<br>Connecté</div></div>
-    <div class="badge-item" data-b="n2"><div class="badge-icon">🧠</div><div class="badge-label">Niveau 2<br>Stratégique</div></div>
-    <div class="badge-item" data-b="n3"><div class="badge-icon">🤝</div><div class="badge-label">Niveau 3<br>Collaboratif</div></div>
-  </div>
-  <div class="gpbar-wrap">
-    <div class="gpbar-label"><span>Progression globale</span><span id="gpCount">0 / 20</span></div>
-    <div class="gpbar-bg"><div class="gpbar-fill" id="gpFill" style="width:0%"></div></div>
-  </div>
-  <div class="levels-grid" id="levelsGrid"></div>
+<div class="home-header"><span class="home-icon">🤖</span><div class="home-title">Agentic Design Patterns</div><div class="home-subtitle">Cours interactif — 21 chapitres, montez en niveau !</div></div>
+<div class="badges-row" id="badgesRow"></div>
+<div class="gpbar-wrap"><div class="gpbar-label"><span>Progression</span><span id="gpCount">0 / 105</span></div><div class="gpbar-bg"><div class="gpbar-fill" id="gpFill" style="width:0%"></div></div></div>
+<div class="levels-grid" id="levelsGrid"></div>
 </div>
-
-<!-- ═══ COURSE ═══ -->
 <div class="screen" id="sCourse">
-  <button class="nav-back" onclick="goTo('sHome');renderHome()">← Retour aux niveaux</button>
-  <div class="course-header">
-    <span class="lvl-tag lvl-tag-0" id="cLvlTag"></span>
-    <div class="c-title" id="cTitle"></div>
-  </div>
-  <div id="courseContent"></div>
-  <div class="char-bubble">
-    <div style="font-size:2.5rem">🤖</div>
-    <div class="bubble-text" id="bubbleCourse"></div>
-  </div>
-  <div class="btn-row">
-    <button class="btn-cyan" onclick="beginQuiz()">📝 Passer le quiz</button>
-    <button class="btn-ghost" onclick="goTo('sHome');renderHome()">🏠 Retour</button>
-  </div>
+<button class="nav-back" onclick="goTo('sHome');renderHome()">← Retour aux chapitres</button>
+<div class="course-header"><span class="lvl-tag" id="cLvlTag"></span><div class="c-title" id="cTitle"></div></div>
+<div id="courseContent"></div>
+<div class="char-bubble"><div style="font-size:2.5rem">🤖</div><div class="bubble-text" id="bubbleCourse"></div></div>
+<div class="btn-row"><button class="btn-cyan" onclick="beginQuiz()">📝 Passer le quiz</button><button class="btn-ghost" onclick="goTo('sHome');renderHome()">🏠 Retour</button></div>
 </div>
-
-<!-- ═══ QUIZ ═══ -->
 <div class="screen" id="sQuiz">
-  <button class="nav-back" onclick="goTo('sCourse');openCourse(curLvl)">← Retour au cours</button>
-  <div class="course-header">
-    <span class="lvl-tag lvl-tag-0" id="qLvlTag"></span>
-    <div class="c-title" id="qTitle"></div>
-  </div>
-  <div class="quiz-progress" id="qDots"></div>
-  <div id="quizArea"></div>
+<button class="nav-back" onclick="goTo('sCourse');openCourse(curLvl)">← Retour au cours</button>
+<div class="course-header"><span class="lvl-tag" id="qLvlTag"></span><div class="c-title" id="qTitle"></div></div>
+<div class="quiz-progress" id="qDots"></div><div id="quizArea"></div>
 </div>
-
-<!-- ═══ RESULT ═══ -->
 <div class="screen" id="sResult">
-  <div class="res-box">
-    <div class="res-stars" id="resStars"></div>
-    <div class="res-score" id="resScore"></div>
-    <div class="res-sub" id="resSub"></div>
-    <div class="res-msg" id="resMsg"></div>
-    <div class="badge-notif" id="badgeNotif"></div>
-    <div class="btn-row" id="resActions" style="justify-content:center;"></div>
-  </div>
+<div class="res-box"><div class="res-stars" id="resStars"></div><div class="res-score" id="resScore"></div><div class="res-sub" id="resSub"></div><div class="res-msg" id="resMsg"></div><div class="badge-notif" id="badgeNotif"></div><div class="btn-row" id="resActions" style="justify-content:center;"></div></div>
 </div>
-
 </div>
-
 <script>
-// ═══════════════════════════════════════════════════════════════
-//  CONFIG
-// ═══════════════════════════════════════════════════════════════
-const LS_KEY = 'agentic_patterns_course';
-const N_Q = 5;
-const UNLOCK = 0.8; // 4/5 pour débloquer le suivant
 
-const BADGES = [
-  { id:'n0', label:'Niveau 0', min:4 },
-  { id:'n1', label:'Niveau 1', min:8 },
-  { id:'n2', label:'Niveau 2', min:12 },
-  { id:'n3', label:'Niveau 3', min:16 },
-];
+const LS_KEY="agentic_patterns_course_v2",N_Q=5,UNLOCK=0.8;
 
-const LEVELS = [
-  { title:'Niveau 0 — Le moteur de raisonnement', desc:'Comprendre ce qu\'est un LLM sans outils ni mémoire', tag:'Fondations' },
-  { title:'Niveau 1 — Le résolveur connecté', desc:'Comment un agent utilise des outils externes (APIs, recherche, RAG)', tag:'Outils & RAG' },
-  { title:'Niveau 2 — Le résolveur stratégique', desc:'Ingénierie du contexte, chaînage, routage, planification', tag:'Patterns' },
-  { title:'Niveau 3 — Le système collaboratif', desc:'Agents spécialisés, communication A2A, garde-fous', tag:'Avancé' },
-];
+const BADGES=[{"id": "ch1", "icon": "\ud83d\udd17", "label": "Ch.1 Chaineur", "min": 4}, {"id": "ch2", "icon": "\ud83d\udd00", "label": "Ch.2 Routeur", "min": 8}, {"id": "ch3", "icon": "\u26a1", "label": "Ch.3 Parall\u00e9liseur", "min": 12}, {"id": "ch5", "icon": "\ud83d\udee0\ufe0f", "label": "Ch.5 Outils", "min": 20}, {"id": "ch7", "icon": "\ud83e\udd1d", "label": "Ch.7 Multi-Agent", "min": 35}, {"id": "ch10", "icon": "\ud83d\udd0c", "label": "Ch.10 MCP", "min": 50}, {"id": "ch14", "icon": "\ud83d\udcda", "label": "Ch.14 RAG", "min": 65}, {"id": "all", "icon": "\ud83c\udfc6", "label": "Master", "min": 100}];
 
-// ═══════════════════════════════════════════════════════════════
-//  LESSONS
-// ═══════════════════════════════════════════════════════════════
-const LESSONS = [
-// NIVEAU 0
-`<div class="lesson-card"><h3>🧠 Qu'est-ce qu'un LLM ?</h3>
-<p>Un <strong>Grand Modèle de Langage</strong> (LLM) est un programme qui a appris à prédire le mot suivant à partir de milliards de textes. Il peut <strong>générer du texte</strong>, répondre à des questions, traduire, résumer...</p>
-<p>Mais <strong>il ne fait que ça</strong> : générer du texte. Il n'a pas de mains, pas d'yeux, pas d'accès à internet.</p></div>
-<div class="lesson-card"><h3>🔌 Les limites du Niveau 0</h3>
-<p>Un LLM seul (Niveau 0) :</p>
-<ul>
-<li>❌ Ne peut <strong>pas accéder à internet</strong> — il ne connaît pas l'actualité</li>
-<li>❌ Ne peut <strong>pas exécuter d'actions</strong> — pas d'API, pas de base de données</li>
-<li>❌ N'a <strong>pas de mémoire</strong> entre les conversations</li>
-<li>❌ Peut <strong>halluciner</strong> — inventer des choses plausibles mais fausses</li>
-</ul>
-<div class="tip">💡 <strong>Exemple :</strong> Demandé qui a gagné les César 2026, un LLM sans outils ne peut pas répondre s'il a été entraîné avant cette date.</div></div>
-<div class="lesson-card"><h3>✅ Ce que le Niveau 0 sait faire</h3>
-<ul>
-<li>✅ Expliquer des concepts établis</li>
-<li>✅ Rédiger, traduire, résumer</li>
-<li>✅ Raisonner sur des problèmes logiques</li>
-<li>✅ Générer du code, des idées, des plans</li>
-</ul>
-<div class="tip">🎯 <strong>À retenir :</strong> Le LLM est le <strong>moteur cognitif</strong> de l'agent. Mais un moteur sans voiture ne roule pas.</div></div>
-<div class="lesson-card"><h3>📝 Le vocabulaire clé</h3>
-<ul>
-<li><strong>LLM</strong> = Grand Modèle de Langage (GPT, Gemini, Claude, Llama...)</li>
-<li><strong>Prompt</strong> = La question ou instruction que vous donnez au modèle</li>
-<li><strong>Hallucination</strong> = Quand le modèle invente une réponse plausible mais fausse</li>
-<li><strong>Token</strong> = Une unité de texte (environ 3/4 d'un mot en français)</li>
-<li><strong>Context window</strong> = La quantité maximale de tokens que le modèle peut traiter</li>
-</ul></div>`,
+const LEVELS=[{"title": "Ch.1 \u2014 Cha\u00eenage de Prompts", "desc": "D\u00e9composer les t\u00e2ches complexes en \u00e9tapes s\u00e9quentielles", "icon": "\ud83d\udd17", "soon": false}, {"title": "Ch.2 \u2014 Routage", "desc": "Aiguiller dynamiquement vers le bon traitement", "icon": "\ud83d\udd00", "soon": true}, {"title": "Ch.3 \u2014 Parall\u00e9lisation", "desc": "Ex\u00e9cuter des t\u00e2ches ind\u00e9pendantes en m\u00eame temps", "icon": "\u26a1", "soon": true}, {"title": "Ch.4 \u2014 R\u00e9flexion", "desc": "Auto-\u00e9valuation et am\u00e9lioration de l'agent", "icon": "\ud83e\ude9e", "soon": true}, {"title": "Ch.5 \u2014 Utilisation d'outils", "desc": "Connecter l'agent \u00e0 des APIs et services externes", "icon": "\ud83d\udee0\ufe0f", "soon": true}, {"title": "Ch.6 \u2014 Planification", "desc": "Strat\u00e9gies de planification pour agents autonomes", "icon": "\ud83d\udccb", "soon": true}, {"title": "Ch.7 \u2014 Multi-Agent", "desc": "Syst\u00e8mes multi-agents collaboratifs", "icon": "\ud83e\udd1d", "soon": true}, {"title": "Ch.8 \u2014 M\u00e9moire", "desc": "G\u00e9rer l'\u00e9tat et l'historique de conversation", "icon": "\ud83d\udcbe", "soon": true}, {"title": "Ch.9 \u2014 Apprentissage", "desc": "Adaptation et am\u00e9lioration continue", "icon": "\ud83d\udcc8", "soon": true}, {"title": "Ch.10 \u2014 MCP", "desc": "Model Context Protocol pour l'interop\u00e9rabilit\u00e9", "icon": "\ud83d\udd0c", "soon": true}, {"title": "Ch.11 \u2014 D\u00e9finition d'objectifs", "desc": "Comment les agents se fixent des buts", "icon": "\ud83c\udfaf", "soon": true}, {"title": "Ch.12 \u2014 Gestion des exceptions", "desc": "R\u00e9cup\u00e9ration gracieuse apr\u00e8s les erreurs", "icon": "\u26a0\ufe0f", "soon": true}, {"title": "Ch.13 \u2014 Humain dans la boucle", "desc": "Supervision humaine des d\u00e9cisions critiques", "icon": "\ud83d\udc64", "soon": true}, {"title": "Ch.14 \u2014 RAG", "desc": "G\u00e9n\u00e9ration augment\u00e9e par la recherche", "icon": "\ud83d\udcda", "soon": true}, {"title": "Ch.15 \u2014 A2A", "desc": "Communication inter-agents", "icon": "\ud83d\udde3\ufe0f", "soon": true}, {"title": "Ch.16 \u2014 Optimisation des ressources", "desc": "Efficacit\u00e9 des syst\u00e8mes agentiques", "icon": "\ud83d\udd0b", "soon": true}, {"title": "Ch.17 \u2014 Raisonnement", "desc": "Techniques avanc\u00e9es de raisonnement", "icon": "\ud83e\udde0", "soon": true}, {"title": "Ch.18 \u2014 Garde-fous", "desc": "S\u00e9curit\u00e9 et contraintes", "icon": "\ud83d\udee1\ufe0f", "soon": true}, {"title": "Ch.19 \u2014 \u00c9valuation", "desc": "Benchmarking la performance des agents", "icon": "\ud83d\udcca", "soon": true}, {"title": "Ch.20 \u2014 Prioritisation", "desc": "Comment les agents priorisent leurs actions", "icon": "\ud83c\udff7\ufe0f", "soon": true}, {"title": "Ch.21 \u2014 Exploration", "desc": "Apprentissage par exploration et d\u00e9couverte", "icon": "\ud83d\udd2d", "soon": true}];
 
-// NIVEAU 1
-`<div class="lesson-card"><h3>🔧 L'agent qui sort de sa boîte</h3>
-<p>Au <strong>Niveau 1</strong>, le LLM devient un agent fonctionnel en se connectant à des <strong>outils externes</strong>. Il n'est plus limité à sa connaissance pré-entraînée.</p>
-<div class="tip">💡 <strong>Analogie :</strong> Si le Niveau 0 est un professeur dans une pièce sans fenêtre, le Niveau 1 est le même professeur, mais on lui a donné un téléphone, une encyclopédie et une calculatrice.</div></div>
-<div class="lesson-card"><h3>🛠️ Les outils d'un agent Niveau 1</h3>
-<ul>
-<li><strong>Recherche web</strong> — Accéder à l'information en temps réel</li>
-<li><strong>APIs</strong> — Interroger des services externes (météo, bourse, base de données...)</li>
-<li><strong>RAG</strong> (Retrieval-Augmented Generation) — Chercher dans ses propres documents</li>
-<li><strong>Calculatrice / Code</strong> — Effectuer des calculs précis</li>
-</ul>
-<p>L'agent peut exécuter une <strong>séquence d'actions</strong> : chercher → analyser → synthétiser → répondre.</p></div>
-<div class="lesson-card"><h3>🔍 C'est quoi le RAG ?</h3>
-<p><strong>RAG = Retrieval-Augmented Generation</strong> (Génération Augmentée par la Recherche)</p>
-<ol>
-<li>L'utilisateur pose une question</li>
-<li>L'agent <strong>cherche</strong> dans une base de documents pertinents</li>
-<li>Il <strong>injecte</strong> ces documents dans son prompt comme contexte</li>
-<li>Il <strong>génère</strong> une réponse basée sur ce contexte réel</li>
-</ol>
-<div class="tip">🎯 <strong>Avantage :</strong> Le RAG réduit les hallucinations car le modèle s'appuie sur des documents réels.</div></div>
-<div class="lesson-card"><h3>📝 Le vocabulaire clé du Niveau 1</h3>
-<ul>
-<li><strong>Tool Use</strong> = Utilisation d'outils — l'agent appelle des fonctions externes</li>
-<li><strong>Function Calling</strong> = Mécanisme où le LLM décide d'appeler une fonction spécifique</li>
-<li><strong>RAG</strong> = Génération augmentée par la recherche dans des documents</li>
-<li><strong>API</strong> = Interface de programmation — un service externe que l'agent peut interroger</li>
-<li><strong>Context Engineering</strong> = L'art de sélectionner et packager la bonne information pour le modèle</li>
-</ul></div>`,
+const LESSONS=["<div class=\"lesson-card\"><h3>\ud83d\udd0d Vue d'ensemble du Cha\u00eenage de Prompts</h3>\n<p>Le <strong>cha\u00eenage de prompts</strong> (aussi appel\u00e9 <strong>pattern Pipeline</strong>) est un paradigme fondamental pour traiter des t\u00e2ches complexes avec un LLM.</p>\n<p><strong>Principe :</strong> au lieu de demander au mod\u00e8le de tout r\u00e9soudre en un seul appel monolithique, on <strong>d\u00e9compose le probl\u00e8me en une s\u00e9quence de sous-probl\u00e8mes</strong> plus simples. Chaque sous-probl\u00e8me est trait\u00e9 par un prompt d\u00e9di\u00e9, et la sortie d'un prompt sert d'entr\u00e9e au suivant.</p>\n<p>Cette approche introduit :</p>\n<ul><li><strong>Modularit\u00e9</strong> \u2014 chaque \u00e9tape est ind\u00e9pendante et focalis\u00e9e</li>\n<li><strong>Clart\u00e9</strong> \u2014 plus facile \u00e0 comprendre et d\u00e9boguer</li>\n<li><strong>Robustesse</strong> \u2014 chaque \u00e9tape est optimis\u00e9e pour une t\u00e2che sp\u00e9cifique</li></ul>\n<div class=\"tip\">\ud83d\udca1 <strong>Cl\u00e9 :</strong> La sortie d'une \u00e9tape alimente l'entr\u00e9e de la suivante \u2014 c'est la <strong>cha\u00eene de d\u00e9pendance</strong>. Le contexte et les r\u00e9sultats pr\u00e9c\u00e9dents guident le traitement suivant.</div>\n<p>Le cha\u00eenage permet aussi d'<strong>int\u00e9grer des outils externes</strong> \u00e0 chaque \u00e9tape (APIs, bases de donn\u00e9es), enrichissant les capacit\u00e9s du LLM au-del\u00e0 de son entra\u00eenement. C'est un pattern <strong>fondateur pour les syst\u00e8mes agentiques</strong>.</p>\n</div>\n\n<div class=\"lesson-card\"><h3>\u26a0\ufe0f Les limites d'un seul prompt</h3>\n<p>Utiliser un seul prompt complexe pour une t\u00e2che multifacette entra\u00eene :</p>\n<ul><li><strong>N\u00e9gligence d'instructions</strong> \u2014 le mod\u00e8le oublie certaines parties du prompt</li>\n<li><strong>D\u00e9rive contextuelle</strong> \u2014 le mod\u00e8le perd le fil du contexte initial</li>\n<li><strong>Propagation d'erreurs</strong> \u2014 une erreur au d\u00e9but s'amplifie dans la suite</li>\n<li><strong>Charge cognitive excessive</strong> \u2014 la probabilit\u00e9 d'hallucination augmente</li>\n<li><strong>Fen\u00eatre de contexte insuffisante</strong> \u2014 le mod\u00e8le manque d'information pour r\u00e9pondre</li></ul>\n<div class=\"tip\">\u274c <strong>Exemple :</strong> Demander \u00ab Analyse ce rapport, r\u00e9sume, identifie les tendances avec chiffres, et r\u00e9dige un email \u00bb risque d'\u00e9chouer car le mod\u00e8le peut bien r\u00e9sumer mais rater le reste.</div>\n</div>\n\n<div class=\"lesson-card\"><h3>\u2705 D\u00e9composition s\u00e9quentielle</h3>\n<p>Avec le cha\u00eenage, la m\u00eame t\u00e2che devient :</p>\n<ol><li><strong>Prompt 1 \u2014 R\u00e9sum\u00e9 :</strong> \u00ab R\u00e9sume les r\u00e9sultats cl\u00e9s du rapport. \u00bb <em>R\u00f4le : Analyste de March\u00e9</em></li>\n<li><strong>Prompt 2 \u2014 Tendances :</strong> \u00ab \u00c0 partir du r\u00e9sum\u00e9, identifie les 3 tendances et extrais les donn\u00e9es chiffr\u00e9es. \u00bb <em>R\u00f4le : Analyste Commercial</em></li>\n<li><strong>Prompt 3 \u2014 Email :</strong> \u00ab R\u00e9dige un email concis pour l'\u00e9quipe marketing. \u00bb <em>R\u00f4le : R\u00e9dacteur Expert</em></li></ol>\n<p><strong>Avantages :</strong></p>\n<ul><li>Chaque \u00e9tape est plus simple \u2192 moins de charge cognitive \u2192 plus de pr\u00e9cision</li>\n<li>On peut assigner un <strong>r\u00f4le distinct</strong> au mod\u00e8le \u00e0 chaque \u00e9tape</li>\n<li>Contr\u00f4le plus granulaire sur chaque sous-t\u00e2che</li></ul>\n<div class=\"tip\">\ud83c\udfd7\ufe0f <strong>Analogie :</strong> Comme un pipeline de fonctions \u2014 chaque fonction fait une op\u00e9ration sp\u00e9cifique avant de passer son r\u00e9sultat \u00e0 la suivante.</div>\n</div>\n\n<div class=\"lesson-card\"><h3>\ud83d\udccb Sortie structur\u00e9e (JSON)</h3>\n<p>La fiabilit\u00e9 d'une cha\u00eene d\u00e9pend de <strong>l'int\u00e9grit\u00e9 des donn\u00e9es transmises</strong> entre les \u00e9tapes. Si la sortie est ambigu\u00eb, l'\u00e9tape suivante risque d'\u00e9chouer.</p>\n<p><strong>Solution :</strong> Sp\u00e9cifier un format de sortie structur\u00e9 \u2014 <strong>JSON</strong> ou XML.</p>\n<pre><code>{\n  \"trends\": [\n    { \"trend_name\": \"Personnalisation IA\",\n      \"supporting_data\": \"73% des consommateurs...\" }\n  ]\n}</code></pre>\n<div class=\"tip\">\ud83c\udfaf Le JSON est lisible par machine, parsable sans ambigu\u00eft\u00e9, et ins\u00e9rable pr\u00e9cis\u00e9ment dans le prompt suivant. Cela minimise les erreurs d'interpr\u00e9tation du langage naturel.</div>\n</div>\n\n<div class=\"lesson-card\"><h3>\ud83c\udfaf 7 cas d'usage pratiques</h3>\n<h4>1. Traitement d'information</h4>\n<p>Extraire \u2192 R\u00e9sumer \u2192 Identifier les entit\u00e9s \u2192 Chercher en base \u2192 G\u00e9n\u00e9rer un rapport</p>\n<h4>2. R\u00e9ponse \u00e0 requ\u00eates complexes</h4>\n<p>Identifier les sous-questions \u2192 Rechercher pour chacune \u2192 Synth\u00e9tiser en une r\u00e9ponse coh\u00e9rente</p>\n<h4>3. Extraction et transformation de donn\u00e9es</h4>\n<p>Extraire les champs \u2192 Valider \u2192 Compl\u00e9ter si manquant \u2192 Fournir en JSON. Pour l'OCR : extraction \u2192 normalisation (\"mille cinquante\" \u2192 1050) \u2192 calcul via outil externe.</p>\n<h4>4. G\u00e9n\u00e9ration de contenu</h4>\n<p>Id\u00e9es \u2192 Plan d\u00e9taill\u00e9 \u2192 R\u00e9daction section par section \u2192 R\u00e9vision finale</p>\n<h4>5. Agents conversationnels avec \u00e9tat</h4>\n<p>Traiter l'\u00e9nonc\u00e9 \u2192 Identifier intent + entit\u00e9s \u2192 Mettre \u00e0 jour l'\u00e9tat \u2192 R\u00e9pondre \u2192 R\u00e9p\u00e9ter en accumulant l'historique</p>\n<h4>6. G\u00e9n\u00e9ration et am\u00e9lioration de code</h4>\n<p>Comprendre \u2192 Pseudocode \u2192 Code initial \u2192 Identifier erreurs \u2192 Am\u00e9liorer \u2192 Documentation + tests</p>\n<div class=\"tip\">\ud83d\udd27 On peut ins\u00e9rer de la <strong>logique d\u00e9terministe</strong> entre les appels au mod\u00e8le \u2014 validation, traitement, branchement conditionnel.</div>\n<h4>7. Raisonnement multimodal</h4>\n<p>Extraire le texte de l'image \u2192 Relier aux \u00e9tiquettes \u2192 Interpr\u00e9ter avec les donn\u00e9es tabulaires</p>\n</div>\n\n<div class=\"lesson-card\"><h3>\ud83d\udcbb Exemple de code \u2014 LangChain avec LCEL</h3>\n<p>LangChain Expression Language (LCEL) permet de cha\u00eener avec le pipe <code>|</code>, comme un pipeline Unix :</p>\n<pre><code>from langchain_openai import ChatOpenAI\nfrom langchain_core.prompts import ChatPromptTemplate\nfrom langchain_core.output_parsers import StrOutputParser\n\nllm = ChatOpenAI(temperature=0)\n\nprompt_extract = ChatPromptTemplate.from_template(\n  \"Extrais les specs techniques : {text_input}\"\n)\nprompt_transform = ChatPromptTemplate.from_template(\n  \"Transforme en JSON (cpu, memory, storage) : {specifications}\"\n)\n\nextraction_chain = prompt_extract | llm | StrOutputParser()\n\nfull_chain = (\n  {\"specifications\": extraction_chain}\n  | prompt_transform | llm | StrOutputParser()\n)\n\nresult = full_chain.invoke({\n  \"text_input\": \"3.5 GHz octo-core, 16GB RAM, 1TB NVMe SSD\"\n})</code></pre>\n<div class=\"tip\">\ud83d\udccc La sortie de <code>extraction_chain</code> est automatiquement inject\u00e9e dans <code>prompt_transform</code> via la variable <code>specifications</code>.</div>\n</div>\n\n<div class=\"lesson-card\"><h3>\ud83e\udde0 Context Engineering vs Prompt Engineering</h3>\n<p><strong>Prompt Engineering</strong> = optimiser la formulation de la requ\u00eate.</p>\n<p><strong>Context Engineering</strong> = construire un <strong>environnement informationnel complet</strong> pour le mod\u00e8le. Inclut :</p>\n<ul><li><strong>System prompt</strong> \u2014 instructions fondamentales (\u00ab Tu es un r\u00e9dacteur technique, ton ton est formel \u00bb)</li>\n<li><strong>Documents r\u00e9cup\u00e9r\u00e9s</strong> \u2014 le mod\u00e8le cherche des infos dans une base de connaissances</li>\n<li><strong>Sorties d'outils</strong> \u2014 r\u00e9sultats d'appels \u00e0 des APIs (ex: disponibilit\u00e9 calendrier)</li>\n<li><strong>Donn\u00e9es implicites</strong> \u2014 identit\u00e9 utilisateur, historique, \u00e9tat environnemental</li></ul>\n<div class=\"tip\">\ud83c\udfaf <strong>Exemple :</strong> Un agent avec Context Engineering, pour proposer un rendez-vous, int\u00e8gre : disponibilit\u00e9 du calendrier (outil), relation professionnelle (implicite), notes des r\u00e9unions pr\u00e9c\u00e9dentes (documents).</div>\n<p><strong>Le principe :</strong> m\u00eame les mod\u00e8les avanc\u00e9s sous-performent avec un contexte limit\u00e9. Ce n'est pas juste \u00ab r\u00e9pondre \u00e0 une question \u00bb, c'est <strong>construire un tableau op\u00e9rationnel complet</strong> pour l'agent.</p>\n<p>Le volet \u00ab engineering \u00bb inclut :</p>\n<ul><li>Cr\u00e9er des <strong>pipelines robustes</strong> pour r\u00e9cup\u00e9rer et transformer les donn\u00e9es</li>\n<li>\u00c9tablir des <strong>boucles de r\u00e9troaction</strong> pour am\u00e9liorer la qualit\u00e9 du contexte</li>\n<li>Utiliser des outils comme <strong>Vertex AI Prompt Optimizer</strong></li></ul>\n</div>\n\n<div class=\"lesson-card\"><h3>\ud83d\udcdd \u00c0 retenir</h3>\n<ul><li><strong>Quoi :</strong> Les t\u00e2ches complexes submergent les LLM en un seul prompt \u2192 n\u00e9gligence d'instructions, d\u00e9rive contextuelle, hallucinations</li>\n<li><strong>Pourquoi :</strong> Le cha\u00eenage d\u00e9compose en sous-t\u00e2ches focalis\u00e9es avec sortie structur\u00e9e, am\u00e9liorant fiabilit\u00e9 et contr\u00f4le</li>\n<li><strong>Quand :</strong> T\u00e2che trop complexe pour un seul prompt, \u00e9tapes distinctes, int\u00e9gration d'outils, syst\u00e8mes agentiques multi-\u00e9tapes</li>\n<li><strong>Outils :</strong> LangChain/LangGraph, Crew AI, Google ADK</li>\n<li><strong>Context Engineering &gt; Prompt Engineering</strong> \u2014 la diff\u00e9rence entre un chatbot basique et un syst\u00e8me agentique sophistiqu\u00e9</li></ul>\n</div>\n", "<div class=\"lesson-card\" style=\"text-align:center;padding:40px 20px\"><h3 style=\"font-size:1.5rem;margin-bottom:12px\">\ud83d\udd12 Chapitre en cours de construction</h3><p style=\"font-size:1rem;color:#8c8ca0\">Ce chapitre sera bient\u00f4t disponible !</p><p style=\"font-size:.88rem;color:#b388ff;margin-top:12px\">En attendant, ma\u00eetrisez les chapitres pr\u00e9c\u00e9dents ! \ud83d\udcaa</p></div>", "<div class=\"lesson-card\" style=\"text-align:center;padding:40px 20px\"><h3 style=\"font-size:1.5rem;margin-bottom:12px\">\ud83d\udd12 Chapitre en cours de construction</h3><p style=\"font-size:1rem;color:#8c8ca0\">Ce chapitre sera bient\u00f4t disponible !</p><p style=\"font-size:.88rem;color:#b388ff;margin-top:12px\">En attendant, ma\u00eetrisez les chapitres pr\u00e9c\u00e9dents ! \ud83d\udcaa</p></div>", "<div class=\"lesson-card\" style=\"text-align:center;padding:40px 20px\"><h3 style=\"font-size:1.5rem;margin-bottom:12px\">\ud83d\udd12 Chapitre en cours de construction</h3><p style=\"font-size:1rem;color:#8c8ca0\">Ce chapitre sera bient\u00f4t disponible !</p><p style=\"font-size:.88rem;color:#b388ff;margin-top:12px\">En attendant, ma\u00eetrisez les chapitres pr\u00e9c\u00e9dents ! \ud83d\udcaa</p></div>", "<div class=\"lesson-card\" style=\"text-align:center;padding:40px 20px\"><h3 style=\"font-size:1.5rem;margin-bottom:12px\">\ud83d\udd12 Chapitre en cours de construction</h3><p style=\"font-size:1rem;color:#8c8ca0\">Ce chapitre sera bient\u00f4t disponible !</p><p style=\"font-size:.88rem;color:#b388ff;margin-top:12px\">En attendant, ma\u00eetrisez les chapitres pr\u00e9c\u00e9dents ! \ud83d\udcaa</p></div>", "<div class=\"lesson-card\" style=\"text-align:center;padding:40px 20px\"><h3 style=\"font-size:1.5rem;margin-bottom:12px\">\ud83d\udd12 Chapitre en cours de construction</h3><p style=\"font-size:1rem;color:#8c8ca0\">Ce chapitre sera bient\u00f4t disponible !</p><p style=\"font-size:.88rem;color:#b388ff;margin-top:12px\">En attendant, ma\u00eetrisez les chapitres pr\u00e9c\u00e9dents ! \ud83d\udcaa</p></div>", "<div class=\"lesson-card\" style=\"text-align:center;padding:40px 20px\"><h3 style=\"font-size:1.5rem;margin-bottom:12px\">\ud83d\udd12 Chapitre en cours de construction</h3><p style=\"font-size:1rem;color:#8c8ca0\">Ce chapitre sera bient\u00f4t disponible !</p><p style=\"font-size:.88rem;color:#b388ff;margin-top:12px\">En attendant, ma\u00eetrisez les chapitres pr\u00e9c\u00e9dents ! \ud83d\udcaa</p></div>", "<div class=\"lesson-card\" style=\"text-align:center;padding:40px 20px\"><h3 style=\"font-size:1.5rem;margin-bottom:12px\">\ud83d\udd12 Chapitre en cours de construction</h3><p style=\"font-size:1rem;color:#8c8ca0\">Ce chapitre sera bient\u00f4t disponible !</p><p style=\"font-size:.88rem;color:#b388ff;margin-top:12px\">En attendant, ma\u00eetrisez les chapitres pr\u00e9c\u00e9dents ! \ud83d\udcaa</p></div>", "<div class=\"lesson-card\" style=\"text-align:center;padding:40px 20px\"><h3 style=\"font-size:1.5rem;margin-bottom:12px\">\ud83d\udd12 Chapitre en cours de construction</h3><p style=\"font-size:1rem;color:#8c8ca0\">Ce chapitre sera bient\u00f4t disponible !</p><p style=\"font-size:.88rem;color:#b388ff;margin-top:12px\">En attendant, ma\u00eetrisez les chapitres pr\u00e9c\u00e9dents ! \ud83d\udcaa</p></div>", "<div class=\"lesson-card\" style=\"text-align:center;padding:40px 20px\"><h3 style=\"font-size:1.5rem;margin-bottom:12px\">\ud83d\udd12 Chapitre en cours de construction</h3><p style=\"font-size:1rem;color:#8c8ca0\">Ce chapitre sera bient\u00f4t disponible !</p><p style=\"font-size:.88rem;color:#b388ff;margin-top:12px\">En attendant, ma\u00eetrisez les chapitres pr\u00e9c\u00e9dents ! \ud83d\udcaa</p></div>", "<div class=\"lesson-card\" style=\"text-align:center;padding:40px 20px\"><h3 style=\"font-size:1.5rem;margin-bottom:12px\">\ud83d\udd12 Chapitre en cours de construction</h3><p style=\"font-size:1rem;color:#8c8ca0\">Ce chapitre sera bient\u00f4t disponible !</p><p style=\"font-size:.88rem;color:#b388ff;margin-top:12px\">En attendant, ma\u00eetrisez les chapitres pr\u00e9c\u00e9dents ! \ud83d\udcaa</p></div>", "<div class=\"lesson-card\" style=\"text-align:center;padding:40px 20px\"><h3 style=\"font-size:1.5rem;margin-bottom:12px\">\ud83d\udd12 Chapitre en cours de construction</h3><p style=\"font-size:1rem;color:#8c8ca0\">Ce chapitre sera bient\u00f4t disponible !</p><p style=\"font-size:.88rem;color:#b388ff;margin-top:12px\">En attendant, ma\u00eetrisez les chapitres pr\u00e9c\u00e9dents ! \ud83d\udcaa</p></div>", "<div class=\"lesson-card\" style=\"text-align:center;padding:40px 20px\"><h3 style=\"font-size:1.5rem;margin-bottom:12px\">\ud83d\udd12 Chapitre en cours de construction</h3><p style=\"font-size:1rem;color:#8c8ca0\">Ce chapitre sera bient\u00f4t disponible !</p><p style=\"font-size:.88rem;color:#b388ff;margin-top:12px\">En attendant, ma\u00eetrisez les chapitres pr\u00e9c\u00e9dents ! \ud83d\udcaa</p></div>", "<div class=\"lesson-card\" style=\"text-align:center;padding:40px 20px\"><h3 style=\"font-size:1.5rem;margin-bottom:12px\">\ud83d\udd12 Chapitre en cours de construction</h3><p style=\"font-size:1rem;color:#8c8ca0\">Ce chapitre sera bient\u00f4t disponible !</p><p style=\"font-size:.88rem;color:#b388ff;margin-top:12px\">En attendant, ma\u00eetrisez les chapitres pr\u00e9c\u00e9dents ! \ud83d\udcaa</p></div>", "<div class=\"lesson-card\" style=\"text-align:center;padding:40px 20px\"><h3 style=\"font-size:1.5rem;margin-bottom:12px\">\ud83d\udd12 Chapitre en cours de construction</h3><p style=\"font-size:1rem;color:#8c8ca0\">Ce chapitre sera bient\u00f4t disponible !</p><p style=\"font-size:.88rem;color:#b388ff;margin-top:12px\">En attendant, ma\u00eetrisez les chapitres pr\u00e9c\u00e9dents ! \ud83d\udcaa</p></div>", "<div class=\"lesson-card\" style=\"text-align:center;padding:40px 20px\"><h3 style=\"font-size:1.5rem;margin-bottom:12px\">\ud83d\udd12 Chapitre en cours de construction</h3><p style=\"font-size:1rem;color:#8c8ca0\">Ce chapitre sera bient\u00f4t disponible !</p><p style=\"font-size:.88rem;color:#b388ff;margin-top:12px\">En attendant, ma\u00eetrisez les chapitres pr\u00e9c\u00e9dents ! \ud83d\udcaa</p></div>", "<div class=\"lesson-card\" style=\"text-align:center;padding:40px 20px\"><h3 style=\"font-size:1.5rem;margin-bottom:12px\">\ud83d\udd12 Chapitre en cours de construction</h3><p style=\"font-size:1rem;color:#8c8ca0\">Ce chapitre sera bient\u00f4t disponible !</p><p style=\"font-size:.88rem;color:#b388ff;margin-top:12px\">En attendant, ma\u00eetrisez les chapitres pr\u00e9c\u00e9dents ! \ud83d\udcaa</p></div>", "<div class=\"lesson-card\" style=\"text-align:center;padding:40px 20px\"><h3 style=\"font-size:1.5rem;margin-bottom:12px\">\ud83d\udd12 Chapitre en cours de construction</h3><p style=\"font-size:1rem;color:#8c8ca0\">Ce chapitre sera bient\u00f4t disponible !</p><p style=\"font-size:.88rem;color:#b388ff;margin-top:12px\">En attendant, ma\u00eetrisez les chapitres pr\u00e9c\u00e9dents ! \ud83d\udcaa</p></div>", "<div class=\"lesson-card\" style=\"text-align:center;padding:40px 20px\"><h3 style=\"font-size:1.5rem;margin-bottom:12px\">\ud83d\udd12 Chapitre en cours de construction</h3><p style=\"font-size:1rem;color:#8c8ca0\">Ce chapitre sera bient\u00f4t disponible !</p><p style=\"font-size:.88rem;color:#b388ff;margin-top:12px\">En attendant, ma\u00eetrisez les chapitres pr\u00e9c\u00e9dents ! \ud83d\udcaa</p></div>", "<div class=\"lesson-card\" style=\"text-align:center;padding:40px 20px\"><h3 style=\"font-size:1.5rem;margin-bottom:12px\">\ud83d\udd12 Chapitre en cours de construction</h3><p style=\"font-size:1rem;color:#8c8ca0\">Ce chapitre sera bient\u00f4t disponible !</p><p style=\"font-size:.88rem;color:#b388ff;margin-top:12px\">En attendant, ma\u00eetrisez les chapitres pr\u00e9c\u00e9dents ! \ud83d\udcaa</p></div>", "<div class=\"lesson-card\" style=\"text-align:center;padding:40px 20px\"><h3 style=\"font-size:1.5rem;margin-bottom:12px\">\ud83d\udd12 Chapitre en cours de construction</h3><p style=\"font-size:1rem;color:#8c8ca0\">Ce chapitre sera bient\u00f4t disponible !</p><p style=\"font-size:.88rem;color:#b388ff;margin-top:12px\">En attendant, ma\u00eetrisez les chapitres pr\u00e9c\u00e9dents ! \ud83d\udcaa</p></div>"];
 
-// NIVEAU 2
-`<div class="lesson-card"><h3>🧠 L'agent qui pense stratégiquement</h3>
-<p>Au <strong>Niveau 2</strong>, l'agent ne se contente pas d'utiliser des outils. Il <strong>planifie</strong>, <strong>stratégise</strong> et s'<strong>auto-améliore</strong>.</p>
-<div class="tip">💡 <strong>La clé :</strong> L'<strong>ingénierie du contexte</strong> (Context Engineering) — le processus stratégique de sélection, conditionnement et gestion de l'information la plus pertinente à chaque étape.</div></div>
-<div class="lesson-card"><h3>🔗 Le Chaînage de Prompts (Prompt Chaining)</h3>
-<p>Au lieu de demander au LLM de tout faire en un seul prompt, on <strong>décompose</strong> la tâche en une séquence d'étapes :</p>
-<ol>
-<li><strong>Prompt 1</strong> : Extraire les informations clés</li>
-<li><strong>Prompt 2</strong> : Analyser et transformer</li>
-<li><strong>Prompt 3</strong> : Synthétiser en réponse finale</li>
-</ol>
-<div class="tip">✅ <strong>Avantage :</strong> Chaque étape est plus simple, moins sujette aux erreurs. La sortie d'un prompt alimente l'entrée du suivant.</div></div>
-<div class="lesson-card"><h3>🔀 Le Routage (Routing)</h3>
-<p>L'agent <strong>analyse l'intention</strong> et dirige vers le bon traitement :</p>
-<ul>
-<li>Si c'est une question technique → agent spécialisé technique</li>
-<li>Si c'est une commande → agent de traitement</li>
-<li>Si c'est une réclamation → agent de support</li>
-</ul>
-<div class="tip">🎯 Le routage, c'est comme le standardiste d'une entreprise : il oriente chaque appel vers le bon service.</div></div>
-<div class="lesson-card"><h3>🔄 La Réflexion (Reflection)</h3>
-<p>L'agent <strong>évalue sa propre sortie</strong> et l'améliore :</p>
-<ol>
-<li>Générer une première réponse</li>
-<li>Critiquer cette réponse</li>
-<li>Réviser en fonction des critiques</li>
-<li>Répéter jusqu'à satisfaction</li>
-</ol>
-<div class="tip">🪞 C'est comme rédiger un brouillon, le relire, puis faire une version finale. L'agent devient son propre relecteur !</div></div>
-<div class="lesson-card"><h3>📝 Les patterns clés du Niveau 2</h3>
-<ul>
-<li><strong>Prompt Chaining</strong> — Décomposition séquentielle</li>
-<li><strong>Routing</strong> — Aiguillage conditionnel</li>
-<li><strong>Parallelization</strong> — Exécution en parallèle de tâches indépendantes</li>
-<li><strong>Reflection</strong> — Auto-évaluation et amélioration</li>
-<li><strong>Planning</strong> — Planification stratégique avant action</li>
-<li><strong>Memory</strong> — Gestion de l'état et de l'historique</li>
-</ul></div>`,
+const QUESTIONS=[[{"topic": "Ch.1", "question": "Quel est le principe fondamental du cha\u00eenage de prompts ?", "options": ["Utiliser un seul prompt tr\u00e8s d\u00e9taill\u00e9", "D\u00e9composer une t\u00e2che complexe en une s\u00e9quence de sous-t\u00e2ches", "Toujours utiliser le mod\u00e8le le plus grand possible", "\u00c9viter les outils externes"], "correct": 1, "explain": "Le cha\u00eenage d\u00e9compose un probl\u00e8me complexe en sous-probl\u00e8mes s\u00e9quentiels."}, {"topic": "Ch.1", "question": "Quel probl\u00e8me le cha\u00eenage r\u00e9sout-il ?", "options": ["Le mod\u00e8le est trop lent", "Un seul prompt ne peut pas traiter une t\u00e2che complexe de mani\u00e8re fiable", "Il n'y a pas assez de mod\u00e8les", "Les utilisateurs ne savent pas \u00e9crire de prompts"], "correct": 1, "explain": "Les t\u00e2ches complexes submergent le LLM en un seul prompt."}, {"topic": "Ch.1", "type": "vf", "question": "Dans un cha\u00eenage, la sortie d'une \u00e9tape devient l'entr\u00e9e de la suivante.", "correct": true, "explain": "Vrai ! C'est le principe fondamental \u2014 la cha\u00eene de d\u00e9pendance."}, {"topic": "Ch.1", "question": "Pourquoi sp\u00e9cifier un format de sortie JSON entre les \u00e9tapes ?", "options": ["Pour \u00e9conomiser des tokens", "Pour rendre la sortie plus jolie", "Pour garantir une sortie lisible par machine et sans ambigu\u00eft\u00e9", "Pour acc\u00e9l\u00e9rer le traitement"], "correct": 2, "explain": "Le JSON est parsable sans ambigu\u00eft\u00e9 et ins\u00e9rable pr\u00e9cis\u00e9ment dans le prompt suivant."}, {"topic": "Ch.1", "question": "Quelle est la diff\u00e9rence entre Prompt Engineering et Context Engineering ?", "options": ["Le Context Engineering utilise plus de tokens", "Le Context Engineering construit un environnement informationnel complet", "Ce sont la m\u00eame chose", "Le Prompt Engineering est pour les petits mod\u00e8les"], "correct": 1, "explain": "Le Context Engineering inclut system prompt, documents r\u00e9cup\u00e9r\u00e9s, sorties d'outils et donn\u00e9es implicites."}]];
 
-// NIVEAU 3
-`<div class="lesson-card"><h3>🤝 L'ère des systèmes multi-agents</h3>
-<p>Au <strong>Niveau 3</strong>, on passe d'un agent unique à une <strong>équipe d'agents spécialisés</strong> qui collaborent.</p>
-<div class="tip">🏢 <strong>Analogie :</strong> Un agent unique, c'est un freelance. Un système multi-agent, c'est une start-up avec un dev, un marketeur, un commercial...</div></div>
-<div class="lesson-card"><h3>🏗️ Les patterns du Niveau 3</h3>
-<ul>
-<li><strong>Multi-Agent</strong> — Plusieurs agents avec des rôles distincts collaborent</li>
-<li><strong>A2A (Agent-to-Agent)</strong> — Protocole de communication entre agents</li>
-<li><strong>Human-in-the-Loop</strong> — L'humain valide les décisions critiques</li>
-<li><strong>Garde-fous (Guardrails)</strong> — Mécanismes de sécurité</li>
-<li><strong>Exception Handling</strong> — Gérer les erreurs et récupérer</li>
-<li><strong>RAG avancé</strong> — Recherche multi-sources</li>
-</ul></div>
-<div class="lesson-card"><h3>🔒 Les garde-fous (Guardrails)</h3>
-<p>Les systèmes multi-agents doivent être <strong>sûrs</strong>. Les garde-fous incluent :</p>
-<ul>
-<li><strong>Validation d'entrée</strong> — Vérifier que les requêtes sont légitimes</li>
-<li><strong>Limitation de périmètre</strong> — L'agent ne sort pas de son rôle</li>
-<li><strong>Validation de sortie</strong> — Vérifier la réponse avant envoi</li>
-<li><strong>Supervision humaine</strong> — Les décisions critiques nécessitent l'approbation humaine</li>
-</ul>
-<div class="tip">⚠️ Un agent sans garde-fous, c'est comme une voiture sans freins : ça peut aller vite, mais c'est dangereux !</div></div>
-<div class="lesson-card"><h3>🔮 Et demain ?</h3>
-<p>Le livre explore 5 hypothèses sur l'avenir :</p>
-<ol>
-<li><strong>L'agent généraliste</strong> — Un agent capable de tout, ou des SLMs spécialisés comme des Lego</li>
-<li><strong>Personnalisation proactive</strong> — L'agent anticipe vos besoins</li>
-<li><strong>Agents incarnés</strong> — L'IA rencontre la robotique (monde physique)</li>
-<li><strong>Économie agentique</strong> — Des agents comme acteurs économiques autonomes</li>
-<li><strong>Systèmes métamorphiques</strong> — Les agents se restructurent eux-mêmes selon les objectifs</li>
-</ol></div>`];
 
-// ═══════════════════════════════════════════════════════════════
-//  QUIZ QUESTIONS (5 par niveau)
-// ═══════════════════════════════════════════════════════════════
-const QUESTIONS = [
-  [ // NIVEAU 0
-    { topic:'Fondations', question:'Qu\'est-ce qu\'un LLM au Niveau 0 ?', options:['Un agent avec accès à internet','Un modèle de langage sans outils ni mémoire','Un système multi-agent collaboratif','Un moteur de recherche avancé'], correct:1, explain:'Au Niveau 0, le LLM fonctionne seul, sans outils, sans mémoire, sans accès externe.' },
-    { topic:'Fondations', question:'Quelle est la principale limite du LLM au Niveau 0 ?', options:['Il ne peut pas lire le français','Il n\'a pas accès à l\'information en temps réel et peut halluciner','Il est trop lent pour répondre','Il ne peut générer que des images'], correct:1, explain:'Le LLM Niveau 0 ne connaît que son entraînement. Il ne peut pas accéder à l\'actualité et peut inventer des réponses (hallucinations).' },
-    { topic:'Fondations', type:'vf', question:'Un LLM au Niveau 0 peut exécuter des actions sur internet.', correct:false, explain:'Faux ! Au Niveau 0, le LLM n\'a aucun accès à internet ni aucune capacité d\'action.' },
-    { topic:'Fondations', question:'Qu\'est-ce qu\'une "hallucination" en IA ?', options:['Quand l\'IA voit des choses qui n\'existent pas','Quand l\'IA génère une réponse plausible mais fausse','Quand l\'IA devient consciente','Quand l\'IA refuse de répondre'], correct:1, explain:'Une hallucination est quand le modèle produit une réponse crédible mais en réalité fausse ou inventée.' },
-    { topic:'Fondations', question:'Lequel est un exemple de ce que le LLM Niveau 0 sait faire ?', options:['Acheter un billet d\'avion','Envoyer un email','Expliquer un concept scientifique établi','Vérifier la météo en temps réel'], correct:2, explain:'Le Niveau 0 peut expliquer des concepts établis car ça repose sur ses connaissances d\'entraînement. Les autres nécessitent des outils externes.' },
-  ],
-  [ // NIVEAU 1
-    { topic:'Outils & RAG', question:'Que permet le Niveau 1 que le Niveau 0 ne peut pas faire ?', options:['Générer du texte plus rapidement','Accéder à des outils externes (APIs, recherche, RAG)','Utiliser moins de tokens','Avoir une interface graphique'], correct:1, explain:'Le Niveau 1 ajoute la capacité d\'utiliser des outils externes : recherche web, APIs, RAG, calculatrices.' },
-    { topic:'Outils & RAG', question:'Que signifie RAG ?', options:['Random Access Generation','Retrieval-Augmented Generation','Real-time Agent Gateway','Robotic Artificial Generalization'], correct:1, explain:'RAG = Retrieval-Augmented Generation. L\'agent cherche des documents pertinents puis génère une réponse basée sur ce contexte réel.' },
-    { topic:'Outils & RAG', type:'vf', question:'Le RAG réduit les hallucinations du modèle.', correct:true, explain:'Vrai ! Le RAG ancre les réponses sur des documents réels et vérifiables, ce qui réduit les hallucinations.' },
-    { topic:'Outils & RAG', question:'Un agent Niveau 1 veut connaître le prix actuel d\'une action. Que fait-il ?', options:['Il devine le prix','Il refuse de répondre','Il appelle une API financière pour le prix en temps réel','Il demande à l\'utilisateur de chercher'], correct:2, explain:'Au Niveau 1, l\'agent utilise des outils. Pour une info en temps réel, il appelle une API spécialisée.' },
-    { topic:'Outils & RAG', question:'Quel est l\'avantage principal du Context Engineering ?', options:['Générer du texte plus poétique','Sélectionner et packager la bonne info pour chaque étape','Réduire la taille du modèle','Empêcher l\'utilisateur de poser des questions'], correct:1, explain:'Le Context Engineering fournit au modèle exactement le bon contexte au bon moment pour maximiser la qualité de la réponse.' },
-  ],
-  [ // NIVEAU 2
-    { topic:'Patterns', question:'Quel problème le Prompt Chaining résout-il ?', options:['Le modèle est trop lent','Un seul prompt ne peut pas traiter une tâche complexe de manière fiable','Pas assez de modèles disponibles','Les utilisateurs ne savent pas rédiger'], correct:1, explain:'Les tâches complexes submergent le LLM en un seul prompt. Le chaînage décompose en étapes focalisées.' },
-    { topic:'Patterns', question:'Qu\'est-ce que le Routing ?', options:['Envoyer tous les messages au même agent','Analyser l\'intention et diriger vers le bon traitement','Créer un réseau de neurones plus rapide','Compiler le code plus efficacement'], correct:1, explain:'Le routage analyse l\'inténtion et aiguille vers le bon sous-agent ou traitement.' },
-    { topic:'Patterns', type:'vf', question:'La Reflection permet à l\'agent de s\'auto-améliorer en critiquant sa propre sortie.', correct:true, explain:'Vrai ! L\'agent génère, critique, révise, et répète jusqu\'à satisfaction.' },
-    { topic:'Patterns', question:'Dans un Prompt Chaining, que se passe-t-il entre chaque étape ?', options:['On relance avec plus de paramètres','La sortie d\'une étape devient l\'entrée de la suivante','On change de modèle','On efface la mémoire'], correct:1, explain:'Chaque maillon transmet son résultat au suivant. Le contexte se construit progressivement.' },
-    { topic:'Patterns', question:'Pourquoi la Parallelization est-elle utile ?', options:['Elle rend le modèle plus créatif','Elle traite des tâches indépendantes en même temps pour gagner du temps','Elle sécurise les réponses','Elle divise les tokens par deux'], correct:1, explain:'Quand des tâches sont indépendantes, on les lance en parallèle au lieu de les faire séquentiellement.' },
-  ],
-  [ // NIVEAU 3
-    { topic:'Multi-Agent', question:'Quelle est la différence principale entre le Niveau 2 et le Niveau 3 ?', options:['Le Niveau 3 utilise plus de tokens','Le Niveau 3 implique plusieurs agents spécialisés qui collaborent','Le Niveau 3 est moins cher','Le Niveau 3 ne nécessite pas d\'outils'], correct:1, explain:'Le Niveau 3 passe d\'un agent unique à une équipe d\'agents spécialisés collaboratifs.' },
-    { topic:'Multi-Agent', question:'Que signifie A2A ?', options:['AI-to-AI','Agent-to-Agent','Automatic-to-Automatic','Application-to-Application'], correct:1, explain:'A2A (Agent-to-Agent) est le protocole de communication entre agents.' },
-    { topic:'Multi-Agent', type:'vf', question:'Les garde-fous servent uniquement à empêcher les pirates informatiques.', correct:false, explain:'Faux ! Ils servent aussi à valider les entrées, limiter le périmètre d\'action, valider les sorties et assurer la supervision humaine.' },
-    { topic:'Multi-Agent', question:'Qu\'est-ce que le Human-in-the-Loop ?', options:['L\'humain fait tout le travail','L\'IA décide de tout','L\'humain valide les décisions critiques de l\'agent','L\'agent ignore les instructions humaines'], correct:2, explain:'L\'humain intervient pour valider les actions critiques de l\'agent avant exécution.' },
-    { topic:'Multi-Agent', question:'Qu\'est-ce qu\'un système multi-agent métamorphique ?', options:['Un agent qui change de couleur','Un système qui s\'auto-restructure en créant/supprimant des agents selon les besoins','Un modèle qui ne fait que générer du texte','Un agent qui refuse de travailler en équipe'], correct:1, explain:'Un système métamorphique restructure dynamiquement sa topologie d\'agents selon l\'objectif et s\'auto-améliore en continu.' },
-  ]
-];
-
-const TOTAL_Q = N_Q * LEVELS.length;
-
+const TOTAL_Q=N_Q*LEVELS.length;
 function mkState(){const s={levels:LEVELS.map(()=>({unlocked:false,best:0,total:0})),totalOk:0,badges:[]};s.levels[0].unlocked=true;return s}
 function load(){try{const s=JSON.parse(localStorage.getItem(LS_KEY));if(!s||!Array.isArray(s.levels)||s.levels.length!==LEVELS.length)return mkState();return s}catch{return mkState()}}
 function save(s){localStorage.setItem(LS_KEY,JSON.stringify(s))}
-
 let curLvl=0,quizQuestions=[],quizIdx=0,quizOk=0,quizAnswered=false;
-
 function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
-
-function beginQuiz(){
-  quizQuestions=shuffle([...QUESTIONS[curLvl]]);
-  quizIdx=0;quizOk=0;quizAnswered=false;
-  document.getElementById('qLvlTag').textContent=LEVELS[curLvl].tag;
-  document.getElementById('qLvlTag').className='lvl-tag lvl-tag-'+curLvl;
-  document.getElementById('qTitle').textContent=LEVELS[curLvl].title;
-  renderDots();goTo('sQuiz');renderQ();
-}
-
-function renderDots(){
-  document.getElementById('qDots').innerHTML=quizQuestions.map((_,i)=>`<div class="qdot${i===0?' cur':''}" id="qd${i}"></div>`).join('');
-}
-
-function renderQ(){
-  const q=quizQuestions[quizIdx];quizAnswered=false;
-  document.querySelectorAll('.qdot').forEach((d,i)=>{d.className='qdot'+(i===quizIdx?' cur':'')});
-  let html='';
-  if(q.type==='vf'){
-    html=`<div class="quiz-card"><div class="quiz-q">${q.question}</div><div class="vf-opts"><div class="vf-opt" onclick="answerVF(true)" id="opt_v">Vrai ✓</div><div class="vf-opt" onclick="answerVF(false)" id="opt_f">Faux ✗</div></div><div id="qFb"></div><div class="btn-row" id="qBtns" style="display:none;justify-content:center;margin-top:16px"><button class="btn-cyan" onclick="nextQ()" id="nxtBtn">Question suivante →</button></div></div>`;
-  } else {
-    html=`<div class="quiz-card"><div class="quiz-q">${q.question}</div><div class="quiz-opts">${q.options.map((o,i)=>`<div class="quiz-opt" onclick="answerQCM(${i})" id="opt${i}">${o}</div>`).join('')}</div><div id="qFb"></div><div class="btn-row" id="qBtns" style="display:none;justify-content:center;margin-top:16px"><button class="btn-cyan" onclick="nextQ()" id="nxtBtn">Question suivante →</button></div></div>`;
-  }
-  document.getElementById('quizArea').innerHTML=html;
-}
-
-function answerQCM(idx){
-  if(quizAnswered)return;quizAnswered=true;
-  const q=quizQuestions[quizIdx];const ok=idx===q.correct;if(ok)quizOk++;
-  q.options.forEach((_,i)=>{const el=document.getElementById('opt'+i);el.classList.add('disabled');if(i===q.correct)el.classList.add('correct');else if(i===idx&&!ok)el.classList.add('wrong')});
-  showFeedback(ok,q.explain);updateDot(quizIdx,ok);
-}
-
-function answerVF(val){
-  if(quizAnswered)return;quizAnswered=true;
-  const q=quizQuestions[quizIdx];const ok=val===q.correct;if(ok)quizOk++;
-  document.getElementById('opt_v').classList.add('disabled');document.getElementById('opt_f').classList.add('disabled');
-  if(q.correct===true){document.getElementById('opt_v').classList.add('correct');if(!ok)document.getElementById('opt_f').classList.add('wrong')}
-  else{document.getElementById('opt_f').classList.add('correct');if(!ok)document.getElementById('opt_v').classList.add('wrong')}
-  showFeedback(ok,q.explain);updateDot(quizIdx,ok);
-}
-
-function showFeedback(ok,explain){
-  const el=document.getElementById('qFb');el.className='quiz-fb show '+(ok?'ok':'err');
-  el.innerHTML=(ok?'✅ ':'❌ ')+explain;
-  document.getElementById('qBtns').style.display='flex';
-  document.getElementById('nxtBtn').textContent=quizIdx<quizQuestions.length-1?'Question suivante →':'Voir mon résultat 🎯';
-}
-
+function beginQuiz(){if(!QUESTIONS[curLvl]||QUESTIONS[curLvl].length===0){alert('Quiz bientôt disponible !');return}quizQuestions=shuffle([...QUESTIONS[curLvl]]);quizIdx=0;quizOk=0;quizAnswered=false;document.getElementById('qLvlTag').textContent=LEVELS[curLvl].title;document.getElementById('qTitle').textContent=LEVELS[curLvl].title;renderDots();goTo('sQuiz');renderQ()}
+function renderDots(){document.getElementById('qDots').innerHTML=quizQuestions.map((_,i)=>'<div class="qdot'+(i===0?' cur':'')+'" id="qd'+i+'"></div>').join('')}
+function renderQ(){const q=quizQuestions[quizIdx];quizAnswered=false;document.querySelectorAll('.qdot').forEach((d,i)=>{d.className='qdot'+(i===quizIdx?' cur':'')});let html='';if(q.type==='vf'){html='<div class="quiz-card"><div class="quiz-q">'+q.question+'</div><div class="vf-opts"><div class="vf-opt" onclick="answerVF(true)" id="opt_v">Vrai ✓</div><div class="vf-opt" onclick="answerVF(false)" id="opt_f">Faux ✗</div></div><div id="qFb"></div><div class="btn-row" id="qBtns" style="display:none;justify-content:center;margin-top:16px"><button class="btn-cyan" onclick="nextQ()" id="nxtBtn">Question suivante →</button></div></div>'}else{html='<div class="quiz-card"><div class="quiz-q">'+q.question+'</div><div class="quiz-opts">'+q.options.map((o,i)=>'<div class="quiz-opt" onclick="answerQCM('+i+')" id="opt'+i+'">'+o+'</div>').join('')+'</div><div id="qFb"></div><div class="btn-row" id="qBtns" style="display:none;justify-content:center;margin-top:16px"><button class="btn-cyan" onclick="nextQ()" id="nxtBtn">Question suivante →</button></div></div>'}document.getElementById('quizArea').innerHTML=html}
+function answerQCM(idx){if(quizAnswered)return;quizAnswered=true;const q=quizQuestions[quizIdx];const ok=idx===q.correct;if(ok)quizOk++;q.options.forEach((_,i)=>{const el=document.getElementById('opt'+i);el.classList.add('disabled');if(i===q.correct)el.classList.add('correct');else if(i===idx&&!ok)el.classList.add('wrong')});showFB(ok,q.explain);updateDot(quizIdx,ok)}
+function answerVF(val){if(quizAnswered)return;quizAnswered=true;const q=quizQuestions[quizIdx];const ok=val===q.correct;if(ok)quizOk++;const v=document.getElementById('opt_v'),f=document.getElementById('opt_f');v.classList.add('disabled');f.classList.add('disabled');if(q.correct===true){v.classList.add('correct');if(!ok)f.classList.add('wrong')}else{f.classList.add('correct');if(!ok)v.classList.add('wrong')}showFB(ok,q.explain);updateDot(quizIdx,ok)}
+function showFB(ok,explain){const el=document.getElementById('qFb');el.className='quiz-fb show '+(ok?'ok':'err');el.innerHTML=(ok?'✅ ':'❌ ')+explain;document.getElementById('qBtns').style.display='flex';document.getElementById('nxtBtn').textContent=quizIdx<quizQuestions.length-1?'Question suivante →':'Voir mon résultat 🎯'}
 function updateDot(idx,ok){const dot=document.getElementById('qd'+idx);if(dot)dot.className='qdot '+(ok?'ok':'err')}
 function nextQ(){quizIdx++;if(quizIdx>=quizQuestions.length)showResult();else renderQ()}
-
-function openCourse(li){
-  curLvl=li;
-  document.getElementById('cLvlTag').textContent=LEVELS[li].tag;
-  document.getElementById('cLvlTag').className='lvl-tag lvl-tag-'+li;
-  document.getElementById('cTitle').textContent=LEVELS[li].title;
-  document.getElementById('courseContent').innerHTML=LESSONS[li];
-  document.getElementById('bubbleCourse').textContent='Je vais tout t\'expliquer ! 🤖';
-  goTo('sCourse');
-}
-
-function showResult(){
-  const st=load(),ls=st.levels[curLvl];
-  const pass=quizOk>=Math.ceil(N_Q*UNLOCK);
-  ls.total+=N_Q;if(quizOk>ls.best)ls.best=quizOk;
-  st.totalOk+=quizOk;
-  if(pass&&curLvl<LEVELS.length-1)st.levels[curLvl+1].unlocked=true;
-  const newBadges=[];
-  BADGES.forEach(b=>{if(!st.badges.includes(b.id)&&st.totalOk>=b.min){st.badges.push(b.id);newBadges.push(b)}});
-  save(st);
-  const stars=quizOk>=5?3:quizOk>=4?2:quizOk>=3?1:0;
-  document.getElementById('resStars').innerHTML=[0,1,2].map(s=>`<span>${s<stars?'⭐':'☆'}</span>`).join('');
-  document.getElementById('resScore').textContent=`${quizOk}/${N_Q}`;
-  document.getElementById('resSub').textContent=quizOk>=4?'bonnes réponses — Bravo !':`bonne${quizOk>1?'s':''} réponse${quizOk>1?'s':''}`;
-  const msg=document.getElementById('resMsg');
-  if(pass){
-    const next=curLvl+2;
-    msg.className='res-msg unlock';
-    msg.innerHTML=next<=LEVELS.length?`🎉 Excellent !<br><strong>Niveau ${next} débloqué !</strong> 🚀`:`🏆 Tu as terminé tous les niveaux !<br><strong>Tu maîtrises les Agentic Design Patterns !</strong> 🌟`;
-  }else{
-    msg.className='res-msg retry';
-    msg.innerHTML=`💪 Continue !<br>Tu as <strong>${quizOk}/${N_Q}</strong>. Il faut <strong>4 ou 5</strong> pour débloquer le niveau suivant.`;
-  }
-  const bn=document.getElementById('badgeNotif');
-  if(newBadges.length>0){const b=newBadges[0];bn.className='badge-notif show';bn.innerHTML=`<h3>${b.icon} Nouveau badge : ${b.label} !</h3><p>Tu as atteint ${st.totalOk} bonnes réponses !</p>`}else{bn.className='badge-notif'}
-  const acts=document.getElementById('resActions');
-  acts.innerHTML='<button class="btn-purple" onclick="beginQuiz()">🔄 Refaire le quiz</button>';
-  if(pass&&curLvl<LEVELS.length-1)acts.innerHTML+=`<button class="btn-green" onclick="openCourse(${curLvl+1})">➡️ Niveau ${curLvl+2}</button>`;
-  acts.innerHTML+='<button class="btn-ghost" onclick="goTo(\'sHome\');renderHome()">🏠 Retour aux niveaux</button>';
-  if(quizOk>=4)confetti();
-  goTo('sResult');
-}
-
-function confetti(){
-  const cols=['#7c4dff','#00e5ff','#ffd740','#69f0ae','#ff5252','#b388ff'];
-  for(let i=0;i<60;i++){const el=document.createElement('div');el.className='confetti-piece';el.style.cssText=`left:${Math.random()*100}vw;top:-10px;background:${cols[i%cols.length]};width:${6+Math.random()*8}px;height:${6+Math.random()*8}px;border-radius:${Math.random()>.5?'50%':'2px'};animation-duration:${2.5+Math.random()*2}s;animation-delay:${Math.random()*.8}s`;document.body.appendChild(el);setTimeout(()=>el.remove(),5000)}
-}
-
-function renderHome(){
-  const st=load();
-  BADGES.forEach(b=>{const el=document.querySelector(`.badge-item[data-b="${b.id}"]`);if(el)el.classList.toggle('earned',st.badges.includes(b.id))});
-  const pct=Math.min(100,Math.round(st.totalOk/TOTAL_Q*100));
-  document.getElementById('gpFill').style.width=pct+'%';
-  document.getElementById('gpCount').textContent=`${st.totalOk} / ${TOTAL_Q}`;
-  document.getElementById('levelsGrid').innerHTML=LEVELS.map((lv,i)=>{
-    const ls=st.levels[i];const cls=!ls.unlocked?'locked':ls.best>=Math.ceil(N_Q*UNLOCK)?'completed':'unlocked';
-    const stars=ls.total>0?[0,1,2].map(s=>s<starsFor(ls.best)?'⭐':'☆').join(''):'';
-    const icon=!ls.unlocked?'🔒':cls==='completed'?'✅':'▶️';
-    return `<div class="level-card ${cls}" onclick="${ls.unlocked?`openCourse(${i})`:''}"><div class="lv-num">${i}</div><div class="lv-info"><div class="lv-title">${lv.title}</div><div class="lv-desc">${lv.desc}</div>${stars?`<div class="lv-stars">${stars}</div>`:''}</div><div class="lv-status">${icon}</div></div>`;
-  }).join('');
-}
-
+function openCourse(li){curLvl=li;document.getElementById('cLvlTag').textContent=LEVELS[li].title;document.getElementById('cTitle').textContent=LEVELS[li].title;document.getElementById('courseContent').innerHTML=LESSONS[li];document.getElementById('bubbleCourse').textContent=LEVELS[li].soon?'Ce chapitre arrive bientôt ! 🚧':'Je vais tout t\'expliquer ! 🤖';goTo('sCourse')}
+function showResult(){const st=load(),ls=st.levels[curLvl];const pass=quizOk>=Math.ceil(N_Q*UNLOCK);ls.total+=N_Q;if(quizOk>ls.best)ls.best=quizOk;st.totalOk+=quizOk;if(pass&&curLvl<LEVELS.length-1)st.levels[curLvl+1].unlocked=true;const nb=[];BADGES.forEach(b=>{if(!st.badges.includes(b.id)&&st.totalOk>=b.min){st.badges.push(b.id);nb.push(b)}});save(st);const stars=quizOk>=5?3:quizOk>=4?2:quizOk>=3?1:0;document.getElementById('resStars').innerHTML=[0,1,2].map(s=>'<span>'+(s<stars?'⭐':'☆')+'</span>').join('');document.getElementById('resScore').textContent=quizOk+'/'+N_Q;document.getElementById('resSub').textContent=quizOk>=4?'bonnes réponses — Bravo !':'bonne'+(quizOk>1?'s':'')+' réponse'+(quizOk>1?'s':'');const msg=document.getElementById('resMsg');if(pass){const next=curLvl+2;msg.className='res-msg unlock';msg.innerHTML=next<=LEVELS.length?'🎉 Excellent !<br><strong>Chapitre '+next+' débloqué !</strong> 🚀':'🏆 Tous les chapitres terminés !<br><strong>Tu maîtrises les Agentic Design Patterns !</strong> 🌟'}else{msg.className='res-msg retry';msg.innerHTML='💪 Continue !<br>Tu as <strong>'+quizOk+'/'+N_Q+'</strong>. Il faut <strong>4 ou 5</strong> pour débloquer le chapitre suivant.'}const bn=document.getElementById('badgeNotif');if(nb.length>0){const b=nb[0];bn.className='badge-notif show';bn.innerHTML='<h3>'+b.icon+' Nouveau badge : '+b.label+' !</h3><p>'+st.totalOk+' bonnes réponses !</p>'}else bn.className='badge-notif';const acts=document.getElementById('resActions');acts.innerHTML='<button class="btn-purple" onclick="beginQuiz()">🔄 Refaire le quiz</button>';if(pass&&curLvl<LEVELS.length-1)acts.innerHTML+='<button class="btn-green" onclick="openCourse('+(curLvl+1)+')">➡️ Chapitre '+(curLvl+2)+'</button>';acts.innerHTML+='<button class="btn-ghost" onclick="goTo(\'sHome\');renderHome()">🏠 Retour</button>';if(quizOk>=4)confetti();goTo('sResult')}
+function confetti(){const cols=['#7c4dff','#00e5ff','#ffd740','#69f0ae','#ff5252','#b388ff'];for(let i=0;i<60;i++){const el=document.createElement('div');el.className='confetti-piece';el.style.cssText='left:'+Math.random()*100+'vw;top:-10px;background:'+cols[i%cols.length]+';width:'+(6+Math.random()*8)+'px;height:'+(6+Math.random()*8)+'px;border-radius:'+(Math.random()>.5?'50%':'2px')+';animation-duration:'+(2.5+Math.random()*2)+'s;animation-delay:'+Math.random()*.8+'s';document.body.appendChild(el);setTimeout(()=>el.remove(),5000)}}
+function renderHome(){const st=load();const br=document.getElementById('badgesRow');br.innerHTML=BADGES.map(b=>'<div class="badge-item'+(st.badges.includes(b.id)?' earned':'')+'" data-b="'+b.id+'"><div class="badge-icon">'+b.icon+'</div><div class="badge-label">'+b.label+'</div></div>').join('');const pct=Math.min(100,Math.round(st.totalOk/TOTAL_Q*100));document.getElementById('gpFill').style.width=pct+'%';document.getElementById('gpCount').textContent=st.totalOk+' / '+TOTAL_Q;document.getElementById('levelsGrid').innerHTML=LEVELS.map((lv,i)=>{const ls=st.levels[i];let cls;if(lv.soon&&!ls.unlocked)cls='soon';else if(!ls.unlocked)cls='locked';else if(ls.best>=Math.ceil(N_Q*UNLOCK))cls='completed';else cls='unlocked';const stars=ls.total>0?[0,1,2].map(s=>s<starsFor(ls.best)?'⭐':'☆').join(''):'';const icon=lv.soon&&!ls.unlocked?'🏗️':!ls.unlocked?'🔒':cls==='completed'?'✅':'▶️';return'<div class="level-card '+cls+'" onclick="'+(cls!=='locked'&&cls!=='soon'?'openCourse('+i+')':'')+'"><div class="lv-num">'+lv.icon+'</div><div class="lv-info"><div class="lv-title">'+lv.title+'</div><div class="lv-desc">'+lv.desc+'</div>'+(stars?'<div class="lv-stars">'+stars+'</div>':'')+'</div><div class="lv-status">'+icon+'</div></div>'}).join('')}
 function starsFor(best){return best>=5?3:best>=4?2:best>=3?1:0}
 function goTo(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo({top:0,behavior:'smooth'})}
 document.addEventListener('DOMContentLoaded',renderHome);
