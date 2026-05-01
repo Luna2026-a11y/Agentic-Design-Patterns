@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🤖 Agentic Design Patterns — Cours interactif</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;800&family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--primary:#7c4dff;--primary-rgb:124,77,255;--primary-light:#b388ff;--accent:#00e5ff;--bg:#0d0d1a;--surface:#1a1a2e;--correct:#00e676;--wrong:#ff5252;--gold:#ffd740}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:#e0e0e0;font-family:'Fredoka',sans-serif;min-height:100dvh}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse at 20% 0%,rgba(124,77,255,.12) 0%,transparent 50%),radial-gradient(ellipse at 80% 100%,rgba(0,229,255,.08) 0%,transparent 50%)}
+.app{max-width:640px;margin:0 auto;padding:48px 20px 60px;position:relative;z-index:1}
+.screen{display:none}.screen.active{display:block}
+
+/* NAV */
+.nav-back{display:inline-flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;color:var(--primary-light);font-family:'Fredoka',sans-serif;font-size:.88rem;font-weight:600;margin-bottom:16px;padding:0;text-decoration:none;transition:color .2s}
+.nav-back:hover{color:var(--accent)}
+
+/* HOME */
+.home-header{text-align:center;margin-bottom:28px}
+.home-icon{font-size:3.5rem;display:block;margin-bottom:4px;animation:iconFloat 3s ease-in-out infinite}
+@keyframes iconFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.home-title{font-family:'Baloo 2',sans-serif;font-size:1.9rem;font-weight:800;background:linear-gradient(135deg,#7c4dff,#00e5ff,#b388ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.home-subtitle{font-size:.85rem;color:#8c8ca0;font-weight:500;margin-top:4px}
+
+/* BADGES */
+.badges-row{display:flex;justify-content:center;gap:10px;margin-bottom:24px;flex-wrap:wrap}
+.badge-item{display:flex;flex-direction:column;align-items:center;gap:4px;opacity:.25;transition:opacity .3s,transform .3s}
+.badge-item.earned{opacity:1;transform:scale(1.06)}
+.badge-icon{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.badge-item[data-b="n0"] .badge-icon{background:linear-gradient(135deg,#455a64,#78909c)}
+.badge-item[data-b="n1"] .badge-icon{background:linear-gradient(135deg,#1565c0,#42a5f5)}
+.badge-item[data-b="n2"] .badge-icon{background:linear-gradient(135deg,#e65100,#ff9800)}
+.badge-item[data-b="n3"] .badge-icon{background:linear-gradient(135deg,#c0ca33,#fdd835)}
+.badge-label{font-size:.6rem;font-weight:600;color:#8c8ca0;text-align:center;line-height:1.3}
+
+/* PROGRESS BAR */
+.gpbar-wrap{background:var(--surface);border-radius:16px;padding:14px 20px;margin-bottom:22px;border:1px solid rgba(124,77,255,.2)}
+.gpbar-label{display:flex;justify-content:space-between;font-size:.78rem;font-weight:600;color:#8c8ca0;margin-bottom:8px}
+.gpbar-bg{height:10px;background:rgba(124,77,255,.15);border-radius:99px;overflow:hidden}
+.gpbar-fill{height:100%;background:linear-gradient(90deg,#7c4dff,#00e5ff);border-radius:99px;transition:width .6s ease}
+
+/* LEVEL CARDS */
+.levels-grid{display:grid;gap:13px}
+.level-card{display:flex;align-items:center;gap:16px;background:var(--surface);border-radius:20px;padding:18px 20px;box-shadow:0 2px 12px rgba(0,0,0,.2);border:2px solid rgba(124,77,255,.15);position:relative;overflow:hidden;transition:all .25s ease}
+.level-card:not(.locked){cursor:pointer}.level-card:not(.locked):hover{border-color:var(--primary-light);transform:translateY(-2px);box-shadow:0 4px 20px rgba(124,77,255,.25)}
+.level-card.locked{opacity:.45;filter:grayscale(.5)}
+.lv-num{width:48px;height:48px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',sans-serif;font-size:1.3rem;font-weight:800;background:linear-gradient(135deg,#7c4dff,#b388ff);color:#fff}
+.level-card.completed .lv-num{background:linear-gradient(135deg,#00c853,#69f0ae)}
+.lv-info{flex:1;min-width:0}.lv-title{font-weight:700;font-size:1rem;color:#fff}.lv-desc{font-size:.78rem;color:#8c8ca0;margin-top:2px}
+.lv-stars{margin-top:4px;font-size:.85rem}.lv-status{font-size:1.3rem;flex-shrink:0}
+
+/* COURSE */
+.course-header{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.lvl-tag{display:inline-block;color:#fff;padding:4px 12px;border-radius:99px;font-size:.75rem;font-weight:700}
+.lvl-tag-0{background:linear-gradient(135deg,#455a64,#78909c)}
+.lvl-tag-1{background:linear-gradient(135deg,#1565c0,#42a5f5)}
+.lvl-tag-2{background:linear-gradient(135deg,#e65100,#ff9800)}
+.lvl-tag-3{background:linear-gradient(135deg,#c0ca33,#fdd835);color:#0d0d1a}
+.c-title{font-family:'Baloo 2',sans-serif;font-size:1.4rem;font-weight:800;color:#fff}
+
+.lesson-card{background:rgba(255,255,255,.05);border:1px solid rgba(124,77,255,.15);border-radius:16px;padding:18px 20px;margin-bottom:14px}
+.lesson-card h3{font-family:'Baloo 2',sans-serif;font-size:1.1rem;color:var(--accent);margin-bottom:8px}
+.lesson-card p{font-size:.88rem;line-height:1.6;margin-bottom:8px}
+.lesson-card strong{color:var(--gold)}.lesson-card em{color:var(--primary-light)}
+.lesson-card ul,.lesson-card ol{font-size:.88rem;padding-left:20px;margin-bottom:8px}.lesson-card li{margin-bottom:4px}
+.lesson-card code{background:rgba(124,77,255,.2);padding:2px 6px;border-radius:4px;font-size:.82rem;color:var(--accent)}
+.tip{background:rgba(0,229,255,.08);border-left:3px solid var(--accent);padding:10px 14px;border-radius:0 10px 10px 0;font-size:.85rem;margin:10px 0}
+.tip strong{color:var(--accent)}
+
+.char-bubble{display:flex;align-items:flex-start;gap:14px;background:var(--surface);border-radius:16px;padding:16px;margin:16px 0;border:1px solid rgba(0,229,255,.15)}
+.bubble-text{font-size:.85rem;line-height:1.5;color:#ccc}
+
+.btn-row{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+
+/* BUTTONS */
+.btn-purple{background:linear-gradient(135deg,#7c4dff,#5e35b1);color:#fff;border:none;padding:14px 28px;border-radius:14px;font-family:'Fredoka',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 4px 14px rgba(124,77,255,.3)}
+.btn-purple:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(124,77,255,.4)}
+.btn-cyan{background:linear-gradient(135deg,#00e5ff,#00b8d4);color:#0d0d1a;border:none;padding:14px 28px;border-radius:14px;font-family:'Fredoka',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 4px 14px rgba(0,229,255,.3)}
+.btn-cyan:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,229,255,.4)}
+.btn-ghost{background:none;color:#8c8ca0;border:1px solid rgba(255,255,255,.1);padding:12px 22px;border-radius:14px;font-family:'Fredoka',sans-serif;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-ghost:hover{border-color:rgba(255,255,255,.3);color:#fff}
+.btn-green{background:linear-gradient(135deg,#00c853,#69f0ae);color:#0d0d1a;border:none;padding:14px 28px;border-radius:14px;font-family:'Fredoka',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 4px 14px rgba(0,200,83,.3)}
+.btn-green:hover{transform:translateY(-2px)}
+
+/* QUIZ */
+.quiz-card{background:var(--surface);border-radius:20px;padding:24px;border:1px solid rgba(124,77,255,.15);margin-bottom:16px}
+.quiz-q{font-family:'Baloo 2',sans-serif;font-size:1.1rem;color:#fff;margin-bottom:16px;line-height:1.5}
+.quiz-opts{display:grid;gap:10px}
+.quiz-opt{background:rgba(124,77,255,.1);border:2px solid rgba(124,77,255,.2);border-radius:12px;padding:14px 18px;cursor:pointer;font-size:.9rem;color:#e0e0e0;transition:all .2s;text-align:left}
+.quiz-opt:hover:not(.disabled){border-color:var(--primary-light);background:rgba(124,77,255,.2)}
+.quiz-opt.correct{border-color:var(--correct);background:rgba(0,230,118,.15);color:#69f0ae}
+.quiz-opt.wrong{border-color:var(--wrong);background:rgba(255,82,82,.15);color:#ff8a80}
+.quiz-opt.disabled{cursor:default;opacity:.7}
+
+.quiz-fb{margin-top:14px;padding:14px;border-radius:12px;font-size:.88rem;line-height:1.5}
+.quiz-fb.ok{background:rgba(0,230,118,.1);border:1px solid rgba(0,230,118,.3);color:#69f0ae}
+.quiz-fb.err{background:rgba(255,82,82,.1);border:1px solid rgba(255,82,82,.3);color:#ff8a80}
+
+.quiz-progress{display:flex;gap:6px;justify-content:center;margin-bottom:16px}
+.qdot{width:12px;height:12px;border-radius:50%;background:rgba(124,77,255,.2);transition:all .3s}
+.qdot.cur{background:var(--accent);transform:scale(1.3)}.qdot.ok{background:var(--correct)}.qdot.err{background:var(--wrong)}
+
+.vf-opts{display:flex;gap:12px}
+.vf-opt{flex:1;padding:14px;text-align:center;cursor:pointer;background:rgba(124,77,255,.1);border:2px solid rgba(124,77,255,.2);border-radius:12px;font-size:1rem;font-weight:700;color:#e0e0e0;transition:all .2s}
+.vf-opt:hover:not(.disabled){border-color:var(--primary-light);background:rgba(124,77,255,.2)}
+.vf-opt.correct{border-color:var(--correct);background:rgba(0,230,118,.15);color:#69f0ae}
+.vf-opt.wrong{border-color:var(--wrong);background:rgba(255,82,82,.15);color:#ff8a80}
+.vf-opt.disabled{cursor:default;opacity:.7}
+
+/* RESULT */
+.res-box{text-align:center;padding:28px 20px}
+.res-score{font-family:'Baloo 2',sans-serif;font-size:3rem;font-weight:800;background:linear-gradient(135deg,#7c4dff,#00e5ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.res-sub{font-size:.9rem;color:#8c8ca0;margin-top:4px}
+.res-msg{margin:18px 0;padding:16px;border-radius:14px;font-size:.95rem;line-height:1.6}
+.res-msg.unlock{background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.2);color:#69f0ae}
+.res-msg.retry{background:rgba(255,152,0,.08);border:1px solid rgba(255,152,0,.2);color:#ffcc80}
+.res-stars{font-size:2rem;margin:12px 0}.res-stars span{margin:0 2px}
+.badge-notif{background:linear-gradient(135deg,rgba(255,215,64,.1),rgba(124,77,255,.1));border:2px solid var(--gold);border-radius:16px;padding:16px;text-align:center;margin:16px 0;display:none}
+.badge-notif.show{display:block}.badge-notif h3{color:var(--gold);font-family:'Baloo 2',sans-serif;margin-bottom:4px}.badge-notif p{font-size:.85rem;color:#ccc}
+
+.confetti-piece{position:fixed;z-index:9999;pointer-events:none;animation:confettiFall linear forwards}
+@keyframes confettiFall{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ═══ HOME ═══ -->
+<div class="screen active" id="sHome">
+  <div class="home-header">
+    <span class="home-icon">🤖</span>
+    <div class="home-title">Agentic Design Patterns</div>
+    <div class="home-subtitle">Cours interactif — Montez en niveau !</div>
+  </div>
+  <div class="badges-row">
+    <div class="badge-item" data-b="n0"><div class="badge-icon">🔌</div><div class="badge-label">Niveau 0<br>Moteur IA</div></div>
+    <div class="badge-item" data-b="n1"><div class="badge-icon">🔧</div><div class="badge-label">Niveau 1<br>Connecté</div></div>
+    <div class="badge-item" data-b="n2"><div class="badge-icon">🧠</div><div class="badge-label">Niveau 2<br>Stratégique</div></div>
+    <div class="badge-item" data-b="n3"><div class="badge-icon">🤝</div><div class="badge-label">Niveau 3<br>Collaboratif</div></div>
+  </div>
+  <div class="gpbar-wrap">
+    <div class="gpbar-label"><span>Progression globale</span><span id="gpCount">0 / 20</span></div>
+    <div class="gpbar-bg"><div class="gpbar-fill" id="gpFill" style="width:0%"></div></div>
+  </div>
+  <div class="levels-grid" id="levelsGrid"></div>
+</div>
+
+<!-- ═══ COURSE ═══ -->
+<div class="screen" id="sCourse">
+  <button class="nav-back" onclick="goTo('sHome');renderHome()">← Retour aux niveaux</button>
+  <div class="course-header">
+    <span class="lvl-tag lvl-tag-0" id="cLvlTag"></span>
+    <div class="c-title" id="cTitle"></div>
+  </div>
+  <div id="courseContent"></div>
+  <div class="char-bubble">
+    <div style="font-size:2.5rem">🤖</div>
+    <div class="bubble-text" id="bubbleCourse"></div>
+  </div>
+  <div class="btn-row">
+    <button class="btn-cyan" onclick="beginQuiz()">📝 Passer le quiz</button>
+    <button class="btn-ghost" onclick="goTo('sHome');renderHome()">🏠 Retour</button>
+  </div>
+</div>
+
+<!-- ═══ QUIZ ═══ -->
+<div class="screen" id="sQuiz">
+  <button class="nav-back" onclick="goTo('sCourse');openCourse(curLvl)">← Retour au cours</button>
+  <div class="course-header">
+    <span class="lvl-tag lvl-tag-0" id="qLvlTag"></span>
+    <div class="c-title" id="qTitle"></div>
+  </div>
+  <div class="quiz-progress" id="qDots"></div>
+  <div id="quizArea"></div>
+</div>
+
+<!-- ═══ RESULT ═══ -->
+<div class="screen" id="sResult">
+  <div class="res-box">
+    <div class="res-stars" id="resStars"></div>
+    <div class="res-score" id="resScore"></div>
+    <div class="res-sub" id="resSub"></div>
+    <div class="res-msg" id="resMsg"></div>
+    <div class="badge-notif" id="badgeNotif"></div>
+    <div class="btn-row" id="resActions" style="justify-content:center;"></div>
+  </div>
+</div>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  CONFIG
+// ═══════════════════════════════════════════════════════════════
+const LS_KEY = 'agentic_patterns_course';
+const N_Q = 5;
+const UNLOCK = 0.8; // 4/5 pour débloquer le suivant
+
+const BADGES = [
+  { id:'n0', label:'Niveau 0', min:4 },
+  { id:'n1', label:'Niveau 1', min:8 },
+  { id:'n2', label:'Niveau 2', min:12 },
+  { id:'n3', label:'Niveau 3', min:16 },
+];
+
+const LEVELS = [
+  { title:'Niveau 0 — Le moteur de raisonnement', desc:'Comprendre ce qu\'est un LLM sans outils ni mémoire', tag:'Fondations' },
+  { title:'Niveau 1 — Le résolveur connecté', desc:'Comment un agent utilise des outils externes (APIs, recherche, RAG)', tag:'Outils & RAG' },
+  { title:'Niveau 2 — Le résolveur stratégique', desc:'Ingénierie du contexte, chaînage, routage, planification', tag:'Patterns' },
+  { title:'Niveau 3 — Le système collaboratif', desc:'Agents spécialisés, communication A2A, garde-fous', tag:'Avancé' },
+];
+
+// ═══════════════════════════════════════════════════════════════
+//  LESSONS
+// ═══════════════════════════════════════════════════════════════
+const LESSONS = [
+// NIVEAU 0
+`<div class="lesson-card"><h3>🧠 Qu'est-ce qu'un LLM ?</h3>
+<p>Un <strong>Grand Modèle de Langage</strong> (LLM) est un programme qui a appris à prédire le mot suivant à partir de milliards de textes. Il peut <strong>générer du texte</strong>, répondre à des questions, traduire, résumer...</p>
+<p>Mais <strong>il ne fait que ça</strong> : générer du texte. Il n'a pas de mains, pas d'yeux, pas d'accès à internet.</p></div>
+<div class="lesson-card"><h3>🔌 Les limites du Niveau 0</h3>
+<p>Un LLM seul (Niveau 0) :</p>
+<ul>
+<li>❌ Ne peut <strong>pas accéder à internet</strong> — il ne connaît pas l'actualité</li>
+<li>❌ Ne peut <strong>pas exécuter d'actions</strong> — pas d'API, pas de base de données</li>
+<li>❌ N'a <strong>pas de mémoire</strong> entre les conversations</li>
+<li>❌ Peut <strong>halluciner</strong> — inventer des choses plausibles mais fausses</li>
+</ul>
+<div class="tip">💡 <strong>Exemple :</strong> Demandé qui a gagné les César 2026, un LLM sans outils ne peut pas répondre s'il a été entraîné avant cette date.</div></div>
+<div class="lesson-card"><h3>✅ Ce que le Niveau 0 sait faire</h3>
+<ul>
+<li>✅ Expliquer des concepts établis</li>
+<li>✅ Rédiger, traduire, résumer</li>
+<li>✅ Raisonner sur des problèmes logiques</li>
+<li>✅ Générer du code, des idées, des plans</li>
+</ul>
+<div class="tip">🎯 <strong>À retenir :</strong> Le LLM est le <strong>moteur cognitif</strong> de l'agent. Mais un moteur sans voiture ne roule pas.</div></div>
+<div class="lesson-card"><h3>📝 Le vocabulaire clé</h3>
+<ul>
+<li><strong>LLM</strong> = Grand Modèle de Langage (GPT, Gemini, Claude, Llama...)</li>
+<li><strong>Prompt</strong> = La question ou instruction que vous donnez au modèle</li>
+<li><strong>Hallucination</strong> = Quand le modèle invente une réponse plausible mais fausse</li>
+<li><strong>Token</strong> = Une unité de texte (environ 3/4 d'un mot en français)</li>
+<li><strong>Context window</strong> = La quantité maximale de tokens que le modèle peut traiter</li>
+</ul></div>`,
+
+// NIVEAU 1
+`<div class="lesson-card"><h3>🔧 L'agent qui sort de sa boîte</h3>
+<p>Au <strong>Niveau 1</strong>, le LLM devient un agent fonctionnel en se connectant à des <strong>outils externes</strong>. Il n'est plus limité à sa connaissance pré-entraînée.</p>
+<div class="tip">💡 <strong>Analogie :</strong> Si le Niveau 0 est un professeur dans une pièce sans fenêtre, le Niveau 1 est le même professeur, mais on lui a donné un téléphone, une encyclopédie et une calculatrice.</div></div>
+<div class="lesson-card"><h3>🛠️ Les outils d'un agent Niveau 1</h3>
+<ul>
+<li><strong>Recherche web</strong> — Accéder à l'information en temps réel</li>
+<li><strong>APIs</strong> — Interroger des services externes (météo, bourse, base de données...)</li>
+<li><strong>RAG</strong> (Retrieval-Augmented Generation) — Chercher dans ses propres documents</li>
+<li><strong>Calculatrice / Code</strong> — Effectuer des calculs précis</li>
+</ul>
+<p>L'agent peut exécuter une <strong>séquence d'actions</strong> : chercher → analyser → synthétiser → répondre.</p></div>
+<div class="lesson-card"><h3>🔍 C'est quoi le RAG ?</h3>
+<p><strong>RAG = Retrieval-Augmented Generation</strong> (Génération Augmentée par la Recherche)</p>
+<ol>
+<li>L'utilisateur pose une question</li>
+<li>L'agent <strong>cherche</strong> dans une base de documents pertinents</li>
+<li>Il <strong>injecte</strong> ces documents dans son prompt comme contexte</li>
+<li>Il <strong>génère</strong> une réponse basée sur ce contexte réel</li>
+</ol>
+<div class="tip">🎯 <strong>Avantage :</strong> Le RAG réduit les hallucinations car le modèle s'appuie sur des documents réels.</div></div>
+<div class="lesson-card"><h3>📝 Le vocabulaire clé du Niveau 1</h3>
+<ul>
+<li><strong>Tool Use</strong> = Utilisation d'outils — l'agent appelle des fonctions externes</li>
+<li><strong>Function Calling</strong> = Mécanisme où le LLM décide d'appeler une fonction spécifique</li>
+<li><strong>RAG</strong> = Génération augmentée par la recherche dans des documents</li>
+<li><strong>API</strong> = Interface de programmation — un service externe que l'agent peut interroger</li>
+<li><strong>Context Engineering</strong> = L'art de sélectionner et packager la bonne information pour le modèle</li>
+</ul></div>`,
+
+// NIVEAU 2
+`<div class="lesson-card"><h3>🧠 L'agent qui pense stratégiquement</h3>
+<p>Au <strong>Niveau 2</strong>, l'agent ne se contente pas d'utiliser des outils. Il <strong>planifie</strong>, <strong>stratégise</strong> et s'<strong>auto-améliore</strong>.</p>
+<div class="tip">💡 <strong>La clé :</strong> L'<strong>ingénierie du contexte</strong> (Context Engineering) — le processus stratégique de sélection, conditionnement et gestion de l'information la plus pertinente à chaque étape.</div></div>
+<div class="lesson-card"><h3>🔗 Le Chaînage de Prompts (Prompt Chaining)</h3>
+<p>Au lieu de demander au LLM de tout faire en un seul prompt, on <strong>décompose</strong> la tâche en une séquence d'étapes :</p>
+<ol>
+<li><strong>Prompt 1</strong> : Extraire les informations clés</li>
+<li><strong>Prompt 2</strong> : Analyser et transformer</li>
+<li><strong>Prompt 3</strong> : Synthétiser en réponse finale</li>
+</ol>
+<div class="tip">✅ <strong>Avantage :</strong> Chaque étape est plus simple, moins sujette aux erreurs. La sortie d'un prompt alimente l'entrée du suivant.</div></div>
+<div class="lesson-card"><h3>🔀 Le Routage (Routing)</h3>
+<p>L'agent <strong>analyse l'intention</strong> et dirige vers le bon traitement :</p>
+<ul>
+<li>Si c'est une question technique → agent spécialisé technique</li>
+<li>Si c'est une commande → agent de traitement</li>
+<li>Si c'est une réclamation → agent de support</li>
+</ul>
+<div class="tip">🎯 Le routage, c'est comme le standardiste d'une entreprise : il oriente chaque appel vers le bon service.</div></div>
+<div class="lesson-card"><h3>🔄 La Réflexion (Reflection)</h3>
+<p>L'agent <strong>évalue sa propre sortie</strong> et l'améliore :</p>
+<ol>
+<li>Générer une première réponse</li>
+<li>Critiquer cette réponse</li>
+<li>Réviser en fonction des critiques</li>
+<li>Répéter jusqu'à satisfaction</li>
+</ol>
+<div class="tip">🪞 C'est comme rédiger un brouillon, le relire, puis faire une version finale. L'agent devient son propre relecteur !</div></div>
+<div class="lesson-card"><h3>📝 Les patterns clés du Niveau 2</h3>
+<ul>
+<li><strong>Prompt Chaining</strong> — Décomposition séquentielle</li>
+<li><strong>Routing</strong> — Aiguillage conditionnel</li>
+<li><strong>Parallelization</strong> — Exécution en parallèle de tâches indépendantes</li>
+<li><strong>Reflection</strong> — Auto-évaluation et amélioration</li>
+<li><strong>Planning</strong> — Planification stratégique avant action</li>
+<li><strong>Memory</strong> — Gestion de l'état et de l'historique</li>
+</ul></div>`,
+
+// NIVEAU 3
+`<div class="lesson-card"><h3>🤝 L'ère des systèmes multi-agents</h3>
+<p>Au <strong>Niveau 3</strong>, on passe d'un agent unique à une <strong>équipe d'agents spécialisés</strong> qui collaborent.</p>
+<div class="tip">🏢 <strong>Analogie :</strong> Un agent unique, c'est un freelance. Un système multi-agent, c'est une start-up avec un dev, un marketeur, un commercial...</div></div>
+<div class="lesson-card"><h3>🏗️ Les patterns du Niveau 3</h3>
+<ul>
+<li><strong>Multi-Agent</strong> — Plusieurs agents avec des rôles distincts collaborent</li>
+<li><strong>A2A (Agent-to-Agent)</strong> — Protocole de communication entre agents</li>
+<li><strong>Human-in-the-Loop</strong> — L'humain valide les décisions critiques</li>
+<li><strong>Garde-fous (Guardrails)</strong> — Mécanismes de sécurité</li>
+<li><strong>Exception Handling</strong> — Gérer les erreurs et récupérer</li>
+<li><strong>RAG avancé</strong> — Recherche multi-sources</li>
+</ul></div>
+<div class="lesson-card"><h3>🔒 Les garde-fous (Guardrails)</h3>
+<p>Les systèmes multi-agents doivent être <strong>sûrs</strong>. Les garde-fous incluent :</p>
+<ul>
+<li><strong>Validation d'entrée</strong> — Vérifier que les requêtes sont légitimes</li>
+<li><strong>Limitation de périmètre</strong> — L'agent ne sort pas de son rôle</li>
+<li><strong>Validation de sortie</strong> — Vérifier la réponse avant envoi</li>
+<li><strong>Supervision humaine</strong> — Les décisions critiques nécessitent l'approbation humaine</li>
+</ul>
+<div class="tip">⚠️ Un agent sans garde-fous, c'est comme une voiture sans freins : ça peut aller vite, mais c'est dangereux !</div></div>
+<div class="lesson-card"><h3>🔮 Et demain ?</h3>
+<p>Le livre explore 5 hypothèses sur l'avenir :</p>
+<ol>
+<li><strong>L'agent généraliste</strong> — Un agent capable de tout, ou des SLMs spécialisés comme des Lego</li>
+<li><strong>Personnalisation proactive</strong> — L'agent anticipe vos besoins</li>
+<li><strong>Agents incarnés</strong> — L'IA rencontre la robotique (monde physique)</li>
+<li><strong>Économie agentique</strong> — Des agents comme acteurs économiques autonomes</li>
+<li><strong>Systèmes métamorphiques</strong> — Les agents se restructurent eux-mêmes selon les objectifs</li>
+</ol></div>`];
+
+// ═══════════════════════════════════════════════════════════════
+//  QUIZ QUESTIONS (5 par niveau)
+// ═══════════════════════════════════════════════════════════════
+const QUESTIONS = [
+  [ // NIVEAU 0
+    { topic:'Fondations', question:'Qu\'est-ce qu\'un LLM au Niveau 0 ?', options:['Un agent avec accès à internet','Un modèle de langage sans outils ni mémoire','Un système multi-agent collaboratif','Un moteur de recherche avancé'], correct:1, explain:'Au Niveau 0, le LLM fonctionne seul, sans outils, sans mémoire, sans accès externe.' },
+    { topic:'Fondations', question:'Quelle est la principale limite du LLM au Niveau 0 ?', options:['Il ne peut pas lire le français','Il n\'a pas accès à l\'information en temps réel et peut halluciner','Il est trop lent pour répondre','Il ne peut générer que des images'], correct:1, explain:'Le LLM Niveau 0 ne connaît que son entraînement. Il ne peut pas accéder à l\'actualité et peut inventer des réponses (hallucinations).' },
+    { topic:'Fondations', type:'vf', question:'Un LLM au Niveau 0 peut exécuter des actions sur internet.', correct:false, explain:'Faux ! Au Niveau 0, le LLM n\'a aucun accès à internet ni aucune capacité d\'action.' },
+    { topic:'Fondations', question:'Qu\'est-ce qu\'une "hallucination" en IA ?', options:['Quand l\'IA voit des choses qui n\'existent pas','Quand l\'IA génère une réponse plausible mais fausse','Quand l\'IA devient consciente','Quand l\'IA refuse de répondre'], correct:1, explain:'Une hallucination est quand le modèle produit une réponse crédible mais en réalité fausse ou inventée.' },
+    { topic:'Fondations', question:'Lequel est un exemple de ce que le LLM Niveau 0 sait faire ?', options:['Acheter un billet d\'avion','Envoyer un email','Expliquer un concept scientifique établi','Vérifier la météo en temps réel'], correct:2, explain:'Le Niveau 0 peut expliquer des concepts établis car ça repose sur ses connaissances d\'entraînement. Les autres nécessitent des outils externes.' },
+  ],
+  [ // NIVEAU 1
+    { topic:'Outils & RAG', question:'Que permet le Niveau 1 que le Niveau 0 ne peut pas faire ?', options:['Générer du texte plus rapidement','Accéder à des outils externes (APIs, recherche, RAG)','Utiliser moins de tokens','Avoir une interface graphique'], correct:1, explain:'Le Niveau 1 ajoute la capacité d\'utiliser des outils externes : recherche web, APIs, RAG, calculatrices.' },
+    { topic:'Outils & RAG', question:'Que signifie RAG ?', options:['Random Access Generation','Retrieval-Augmented Generation','Real-time Agent Gateway','Robotic Artificial Generalization'], correct:1, explain:'RAG = Retrieval-Augmented Generation. L\'agent cherche des documents pertinents puis génère une réponse basée sur ce contexte réel.' },
+    { topic:'Outils & RAG', type:'vf', question:'Le RAG réduit les hallucinations du modèle.', correct:true, explain:'Vrai ! Le RAG ancre les réponses sur des documents réels et vérifiables, ce qui réduit les hallucinations.' },
+    { topic:'Outils & RAG', question:'Un agent Niveau 1 veut connaître le prix actuel d\'une action. Que fait-il ?', options:['Il devine le prix','Il refuse de répondre','Il appelle une API financière pour le prix en temps réel','Il demande à l\'utilisateur de chercher'], correct:2, explain:'Au Niveau 1, l\'agent utilise des outils. Pour une info en temps réel, il appelle une API spécialisée.' },
+    { topic:'Outils & RAG', question:'Quel est l\'avantage principal du Context Engineering ?', options:['Générer du texte plus poétique','Sélectionner et packager la bonne info pour chaque étape','Réduire la taille du modèle','Empêcher l\'utilisateur de poser des questions'], correct:1, explain:'Le Context Engineering fournit au modèle exactement le bon contexte au bon moment pour maximiser la qualité de la réponse.' },
+  ],
+  [ // NIVEAU 2
+    { topic:'Patterns', question:'Quel problème le Prompt Chaining résout-il ?', options:['Le modèle est trop lent','Un seul prompt ne peut pas traiter une tâche complexe de manière fiable','Pas assez de modèles disponibles','Les utilisateurs ne savent pas rédiger'], correct:1, explain:'Les tâches complexes submergent le LLM en un seul prompt. Le chaînage décompose en étapes focalisées.' },
+    { topic:'Patterns', question:'Qu\'est-ce que le Routing ?', options:['Envoyer tous les messages au même agent','Analyser l\'intention et diriger vers le bon traitement','Créer un réseau de neurones plus rapide','Compiler le code plus efficacement'], correct:1, explain:'Le routage analyse l\'inténtion et aiguille vers le bon sous-agent ou traitement.' },
+    { topic:'Patterns', type:'vf', question:'La Reflection permet à l\'agent de s\'auto-améliorer en critiquant sa propre sortie.', correct:true, explain:'Vrai ! L\'agent génère, critique, révise, et répète jusqu\'à satisfaction.' },
+    { topic:'Patterns', question:'Dans un Prompt Chaining, que se passe-t-il entre chaque étape ?', options:['On relance avec plus de paramètres','La sortie d\'une étape devient l\'entrée de la suivante','On change de modèle','On efface la mémoire'], correct:1, explain:'Chaque maillon transmet son résultat au suivant. Le contexte se construit progressivement.' },
+    { topic:'Patterns', question:'Pourquoi la Parallelization est-elle utile ?', options:['Elle rend le modèle plus créatif','Elle traite des tâches indépendantes en même temps pour gagner du temps','Elle sécurise les réponses','Elle divise les tokens par deux'], correct:1, explain:'Quand des tâches sont indépendantes, on les lance en parallèle au lieu de les faire séquentiellement.' },
+  ],
+  [ // NIVEAU 3
+    { topic:'Multi-Agent', question:'Quelle est la différence principale entre le Niveau 2 et le Niveau 3 ?', options:['Le Niveau 3 utilise plus de tokens','Le Niveau 3 implique plusieurs agents spécialisés qui collaborent','Le Niveau 3 est moins cher','Le Niveau 3 ne nécessite pas d\'outils'], correct:1, explain:'Le Niveau 3 passe d\'un agent unique à une équipe d\'agents spécialisés collaboratifs.' },
+    { topic:'Multi-Agent', question:'Que signifie A2A ?', options:['AI-to-AI','Agent-to-Agent','Automatic-to-Automatic','Application-to-Application'], correct:1, explain:'A2A (Agent-to-Agent) est le protocole de communication entre agents.' },
+    { topic:'Multi-Agent', type:'vf', question:'Les garde-fous servent uniquement à empêcher les pirates informatiques.', correct:false, explain:'Faux ! Ils servent aussi à valider les entrées, limiter le périmètre d\'action, valider les sorties et assurer la supervision humaine.' },
+    { topic:'Multi-Agent', question:'Qu\'est-ce que le Human-in-the-Loop ?', options:['L\'humain fait tout le travail','L\'IA décide de tout','L\'humain valide les décisions critiques de l\'agent','L\'agent ignore les instructions humaines'], correct:2, explain:'L\'humain intervient pour valider les actions critiques de l\'agent avant exécution.' },
+    { topic:'Multi-Agent', question:'Qu\'est-ce qu\'un système multi-agent métamorphique ?', options:['Un agent qui change de couleur','Un système qui s\'auto-restructure en créant/supprimant des agents selon les besoins','Un modèle qui ne fait que générer du texte','Un agent qui refuse de travailler en équipe'], correct:1, explain:'Un système métamorphique restructure dynamiquement sa topologie d\'agents selon l\'objectif et s\'auto-améliore en continu.' },
+  ]
+];
+
+const TOTAL_Q = N_Q * LEVELS.length;
+
+function mkState(){const s={levels:LEVELS.map(()=>({unlocked:false,best:0,total:0})),totalOk:0,badges:[]};s.levels[0].unlocked=true;return s}
+function load(){try{const s=JSON.parse(localStorage.getItem(LS_KEY));if(!s||!Array.isArray(s.levels)||s.levels.length!==LEVELS.length)return mkState();return s}catch{return mkState()}}
+function save(s){localStorage.setItem(LS_KEY,JSON.stringify(s))}
+
+let curLvl=0,quizQuestions=[],quizIdx=0,quizOk=0,quizAnswered=false;
+
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+
+function beginQuiz(){
+  quizQuestions=shuffle([...QUESTIONS[curLvl]]);
+  quizIdx=0;quizOk=0;quizAnswered=false;
+  document.getElementById('qLvlTag').textContent=LEVELS[curLvl].tag;
+  document.getElementById('qLvlTag').className='lvl-tag lvl-tag-'+curLvl;
+  document.getElementById('qTitle').textContent=LEVELS[curLvl].title;
+  renderDots();goTo('sQuiz');renderQ();
+}
+
+function renderDots(){
+  document.getElementById('qDots').innerHTML=quizQuestions.map((_,i)=>`<div class="qdot${i===0?' cur':''}" id="qd${i}"></div>`).join('');
+}
+
+function renderQ(){
+  const q=quizQuestions[quizIdx];quizAnswered=false;
+  document.querySelectorAll('.qdot').forEach((d,i)=>{d.className='qdot'+(i===quizIdx?' cur':'')});
+  let html='';
+  if(q.type==='vf'){
+    html=`<div class="quiz-card"><div class="quiz-q">${q.question}</div><div class="vf-opts"><div class="vf-opt" onclick="answerVF(true)" id="opt_v">Vrai ✓</div><div class="vf-opt" onclick="answerVF(false)" id="opt_f">Faux ✗</div></div><div id="qFb"></div><div class="btn-row" id="qBtns" style="display:none;justify-content:center;margin-top:16px"><button class="btn-cyan" onclick="nextQ()" id="nxtBtn">Question suivante →</button></div></div>`;
+  } else {
+    html=`<div class="quiz-card"><div class="quiz-q">${q.question}</div><div class="quiz-opts">${q.options.map((o,i)=>`<div class="quiz-opt" onclick="answerQCM(${i})" id="opt${i}">${o}</div>`).join('')}</div><div id="qFb"></div><div class="btn-row" id="qBtns" style="display:none;justify-content:center;margin-top:16px"><button class="btn-cyan" onclick="nextQ()" id="nxtBtn">Question suivante →</button></div></div>`;
+  }
+  document.getElementById('quizArea').innerHTML=html;
+}
+
+function answerQCM(idx){
+  if(quizAnswered)return;quizAnswered=true;
+  const q=quizQuestions[quizIdx];const ok=idx===q.correct;if(ok)quizOk++;
+  q.options.forEach((_,i)=>{const el=document.getElementById('opt'+i);el.classList.add('disabled');if(i===q.correct)el.classList.add('correct');else if(i===idx&&!ok)el.classList.add('wrong')});
+  showFeedback(ok,q.explain);updateDot(quizIdx,ok);
+}
+
+function answerVF(val){
+  if(quizAnswered)return;quizAnswered=true;
+  const q=quizQuestions[quizIdx];const ok=val===q.correct;if(ok)quizOk++;
+  document.getElementById('opt_v').classList.add('disabled');document.getElementById('opt_f').classList.add('disabled');
+  if(q.correct===true){document.getElementById('opt_v').classList.add('correct');if(!ok)document.getElementById('opt_f').classList.add('wrong')}
+  else{document.getElementById('opt_f').classList.add('correct');if(!ok)document.getElementById('opt_v').classList.add('wrong')}
+  showFeedback(ok,q.explain);updateDot(quizIdx,ok);
+}
+
+function showFeedback(ok,explain){
+  const el=document.getElementById('qFb');el.className='quiz-fb show '+(ok?'ok':'err');
+  el.innerHTML=(ok?'✅ ':'❌ ')+explain;
+  document.getElementById('qBtns').style.display='flex';
+  document.getElementById('nxtBtn').textContent=quizIdx<quizQuestions.length-1?'Question suivante →':'Voir mon résultat 🎯';
+}
+
+function updateDot(idx,ok){const dot=document.getElementById('qd'+idx);if(dot)dot.className='qdot '+(ok?'ok':'err')}
+function nextQ(){quizIdx++;if(quizIdx>=quizQuestions.length)showResult();else renderQ()}
+
+function openCourse(li){
+  curLvl=li;
+  document.getElementById('cLvlTag').textContent=LEVELS[li].tag;
+  document.getElementById('cLvlTag').className='lvl-tag lvl-tag-'+li;
+  document.getElementById('cTitle').textContent=LEVELS[li].title;
+  document.getElementById('courseContent').innerHTML=LESSONS[li];
+  document.getElementById('bubbleCourse').textContent='Je vais tout t\'expliquer ! 🤖';
+  goTo('sCourse');
+}
+
+function showResult(){
+  const st=load(),ls=st.levels[curLvl];
+  const pass=quizOk>=Math.ceil(N_Q*UNLOCK);
+  ls.total+=N_Q;if(quizOk>ls.best)ls.best=quizOk;
+  st.totalOk+=quizOk;
+  if(pass&&curLvl<LEVELS.length-1)st.levels[curLvl+1].unlocked=true;
+  const newBadges=[];
+  BADGES.forEach(b=>{if(!st.badges.includes(b.id)&&st.totalOk>=b.min){st.badges.push(b.id);newBadges.push(b)}});
+  save(st);
+  const stars=quizOk>=5?3:quizOk>=4?2:quizOk>=3?1:0;
+  document.getElementById('resStars').innerHTML=[0,1,2].map(s=>`<span>${s<stars?'⭐':'☆'}</span>`).join('');
+  document.getElementById('resScore').textContent=`${quizOk}/${N_Q}`;
+  document.getElementById('resSub').textContent=quizOk>=4?'bonnes réponses — Bravo !':`bonne${quizOk>1?'s':''} réponse${quizOk>1?'s':''}`;
+  const msg=document.getElementById('resMsg');
+  if(pass){
+    const next=curLvl+2;
+    msg.className='res-msg unlock';
+    msg.innerHTML=next<=LEVELS.length?`🎉 Excellent !<br><strong>Niveau ${next} débloqué !</strong> 🚀`:`🏆 Tu as terminé tous les niveaux !<br><strong>Tu maîtrises les Agentic Design Patterns !</strong> 🌟`;
+  }else{
+    msg.className='res-msg retry';
+    msg.innerHTML=`💪 Continue !<br>Tu as <strong>${quizOk}/${N_Q}</strong>. Il faut <strong>4 ou 5</strong> pour débloquer le niveau suivant.`;
+  }
+  const bn=document.getElementById('badgeNotif');
+  if(newBadges.length>0){const b=newBadges[0];bn.className='badge-notif show';bn.innerHTML=`<h3>${b.icon} Nouveau badge : ${b.label} !</h3><p>Tu as atteint ${st.totalOk} bonnes réponses !</p>`}else{bn.className='badge-notif'}
+  const acts=document.getElementById('resActions');
+  acts.innerHTML='<button class="btn-purple" onclick="beginQuiz()">🔄 Refaire le quiz</button>';
+  if(pass&&curLvl<LEVELS.length-1)acts.innerHTML+=`<button class="btn-green" onclick="openCourse(${curLvl+1})">➡️ Niveau ${curLvl+2}</button>`;
+  acts.innerHTML+='<button class="btn-ghost" onclick="goTo(\'sHome\');renderHome()">🏠 Retour aux niveaux</button>';
+  if(quizOk>=4)confetti();
+  goTo('sResult');
+}
+
+function confetti(){
+  const cols=['#7c4dff','#00e5ff','#ffd740','#69f0ae','#ff5252','#b388ff'];
+  for(let i=0;i<60;i++){const el=document.createElement('div');el.className='confetti-piece';el.style.cssText=`left:${Math.random()*100}vw;top:-10px;background:${cols[i%cols.length]};width:${6+Math.random()*8}px;height:${6+Math.random()*8}px;border-radius:${Math.random()>.5?'50%':'2px'};animation-duration:${2.5+Math.random()*2}s;animation-delay:${Math.random()*.8}s`;document.body.appendChild(el);setTimeout(()=>el.remove(),5000)}
+}
+
+function renderHome(){
+  const st=load();
+  BADGES.forEach(b=>{const el=document.querySelector(`.badge-item[data-b="${b.id}"]`);if(el)el.classList.toggle('earned',st.badges.includes(b.id))});
+  const pct=Math.min(100,Math.round(st.totalOk/TOTAL_Q*100));
+  document.getElementById('gpFill').style.width=pct+'%';
+  document.getElementById('gpCount').textContent=`${st.totalOk} / ${TOTAL_Q}`;
+  document.getElementById('levelsGrid').innerHTML=LEVELS.map((lv,i)=>{
+    const ls=st.levels[i];const cls=!ls.unlocked?'locked':ls.best>=Math.ceil(N_Q*UNLOCK)?'completed':'unlocked';
+    const stars=ls.total>0?[0,1,2].map(s=>s<starsFor(ls.best)?'⭐':'☆').join(''):'';
+    const icon=!ls.unlocked?'🔒':cls==='completed'?'✅':'▶️';
+    return `<div class="level-card ${cls}" onclick="${ls.unlocked?`openCourse(${i})`:''}"><div class="lv-num">${i}</div><div class="lv-info"><div class="lv-title">${lv.title}</div><div class="lv-desc">${lv.desc}</div>${stars?`<div class="lv-stars">${stars}</div>`:''}</div><div class="lv-status">${icon}</div></div>`;
+  }).join('');
+}
+
+function starsFor(best){return best>=5?3:best>=4?2:best>=3?1:0}
+function goTo(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo({top:0,behavior:'smooth'})}
+document.addEventListener('DOMContentLoaded',renderHome);
+</script>
+</body>
+</html>
